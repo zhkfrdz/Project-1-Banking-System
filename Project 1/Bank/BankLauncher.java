@@ -3,7 +3,6 @@ package Bank;
 import Accounts.Account;
 import Accounts.CreditAccountModule.CreditAccount;
 import Accounts.SavingsAccountModule.SavingsAccount;
-import Bank.BankComparator;
 import Main.Field;
 import Main.Main;
 import java.util.ArrayList;
@@ -98,8 +97,8 @@ public class BankLauncher {
      * Handles the login process for the bank.
      */
     public static void bankLogin() {
-        int ID = Integer.parseInt(Main.prompt("Enter bank id: ", true));
-        String name = Main.prompt("Enter bank name: ", true);
+        int ID = Integer.parseInt(Main.prompt("Enter Bank ID: ", true));
+        String name = Main.prompt("Enter Bank Name: ", true);
         String passcode = Main.prompt("Enter PIN: ", true);
 
         BankComparator comparator = new BankComparator(); // Assuming a comparator is available
@@ -145,7 +144,7 @@ public class BankLauncher {
      */
     private static void setLogSession(Bank b) {
         if (isLogged()) {
-            System.out.println("Another bank account is currently logged in");
+            System.out.println("Another Bank Account is currently logged in");
             return;
         }
 

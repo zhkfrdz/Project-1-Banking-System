@@ -1,8 +1,8 @@
 package Accounts.SavingsAccountModule;
 
+import Accounts.Account;
 import Accounts.IllegalAccountType;
 import Bank.Bank;
-
 public interface FundTransfer{
     /**
      * Cross-transferring of money from one account of one bank, and another account of another bank.

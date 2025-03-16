@@ -18,7 +18,7 @@ public class Transaction {
      */
     public String accountNumber;
     /**
-     * Type of transcation that was triggered.
+     * Type of transaction that was triggered.
      */
     public Transactions transactionType;
     /**
