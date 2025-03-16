@@ -99,15 +99,15 @@ public class Bank {
         Field<String, Integer> pinField = new Field<>("Pin", String.class, 4, new Field.StringFieldLengthValidator());
 
         Field<String, Integer> accountNum = new Field<>("Account Number", String.class, 1, new Field.StringFieldLengthValidator());
-        accountNum.setFieldValue("Enter account number: ");
+        accountNum.setFieldValue("Enter Account Number: ");
         createNew.add(accountNum);
-        firstNameField.setFieldValue("Enter first name: ");
+        firstNameField.setFieldValue("Enter First Name: ");
         createNew.add(firstNameField);
-        lastNameField.setFieldValue("Enter last name: ");
+        lastNameField.setFieldValue("Enter Last Name: ");
         createNew.add(lastNameField);
-        emailField.setFieldValue("Enter email: ");
+        emailField.setFieldValue("Enter Email: ");
         createNew.add(emailField);
-        pinField.setFieldValue("Enter pin (4 digits): ");
+        pinField.setFieldValue("Enter Pin (4 digits): ");
         createNew.add(pinField);
 
         return createNew;
@@ -141,7 +141,7 @@ public class Bank {
 
         while (true) {
             Field<Double, Double> balField = new Field<Double,Double>("Credit", Double.class, 500.0, new Field.DoubleFieldValidator());
-            balField.setFieldValue("Enter deposit amount: ", true);
+            balField.setFieldValue("Enter Deposit Amount: ", true);
             if (balField.getFieldValue() <= this.DEPOSITLIMIT) {
                 double balance = balField.getFieldValue();
                 savings = new SavingsAccount(bank, accountNum, firstName, lastName, email, pin, balance);
@@ -157,7 +157,7 @@ public class Bank {
 
         if (!exists) {
             BANKACCOUNTS.add(account);
-            System.out.println("New account added successfully!");
+            System.out.println("New Account Added Successfully!");
         } else {
             System.out.println("Account number already exists in the bank. Cannot add duplicate account.");
         }
