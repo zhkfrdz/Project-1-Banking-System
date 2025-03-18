@@ -8,7 +8,6 @@ import Main.Menu;
 import Main.Main;
 import Main.Field;
 
-
 public class BankLauncher {
     private static ArrayList<Bank> BANKS = new ArrayList<>();
     private static Bank loggedBank = null;

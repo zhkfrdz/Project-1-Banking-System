@@ -1,8 +1,10 @@
 package Accounts.CreditAccountModule;
+
 import Accounts.Account;
 import Accounts.IllegalAccountType;
 import Bank.Bank;
 import Accounts.SavingsAccountModule.SavingsAccount;
+
 public class CreditAccount extends Account implements Payment, Recompense {
     private double loan;
 

@@ -1,6 +1,8 @@
 package Accounts;
+
 import java.util.ArrayList;
 import Bank.Bank;
+
 public abstract class Account {
     private Bank bank;
     private final String ACCOUNTNUMBER;
