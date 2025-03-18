@@ -13,6 +13,39 @@ public class BankLauncher {
     private static Bank loggedBank = null;
 
     /**
+     * Returns the list of registered banks.
+     * @return the list of banks
+     */
+    public static ArrayList<Bank> getBANKS() {
+
+        if (BANKS == null) {
+            BANKS = new ArrayList<>();
+            return BANKS;
+        } else if (BANKS.isEmpty()) {
+            return BANKS;
+        }
+        return BANKS;
+    }
+
+    /**
+     * Returns the currently logged-in bank.
+     * @return the logged bank
+     */
+    public static Bank getLoggedBank() {
+
+        return loggedBank;
+    }
+
+    /**
+     * Sets the currently logged-in bank.
+     * @param loggedBank the bank to set as logged in
+     */
+    public static void setLoggedBank(Bank loggedBank) {
+
+        BankLauncher.loggedBank = loggedBank;
+    }
+
+    /**
      * Checks if a bank is currently logged in.
      * @return true if a bank is logged in, false otherwise
      */
@@ -64,7 +97,7 @@ public class BankLauncher {
     /**
      * Displays the accounts of the logged-in bank.
      */
-    public static void showAccounts() {
+    private static void showAccounts() {
 
         while (true) {
             Main.showMenuHeader("Show Accounts");
@@ -93,26 +126,6 @@ public class BankLauncher {
     }
 
     /**
-     * Prompts for bank name and PIN to log in.
-     */
-    public static void bankLogin() {
-
-        Main.showMenuHeader("Bank Login");
-        String bankName = Main.prompt("Enter Bank Name: ", true);
-        String pin = Main.prompt("Enter PIN: ", true);
-
-        for (Bank bank : BANKS) {
-            if (bank.getName().equals(bankName) && bank.getPasscode().equals(pin)) {
-                setLogSession(bank);
-                break;
-            }
-        }
-        if (loggedBank == null) {
-            System.out.println("Invalid bank name or PIN. Please try again.");
-        }
-    }
-
-    /**
      * Prompts for account type and creates a new account.
      */
     private static void newAccounts() {
@@ -132,6 +145,26 @@ public class BankLauncher {
             default:
                 System.out.println("Invalid option");
                 break;
+        }
+    }
+
+    /**
+     * Prompts for bank name and PIN to log in.
+     */
+    public static void bankLogin() {
+
+        Main.showMenuHeader("Bank Login");
+        String bankName = Main.prompt("Enter Bank Name: ", true);
+        String pin = Main.prompt("Enter PIN: ", true);
+
+        for (Bank bank : BANKS) {
+            if (bank.getName().equals(bankName) && bank.getPasscode().equals(pin)) {
+                setLogSession(bank);
+                break;
+            }
+        }
+        if (loggedBank == null) {
+            System.out.println("Invalid bank name or PIN. Please try again.");
         }
     }
 
@@ -277,38 +310,5 @@ public class BankLauncher {
     public static int bankSize() {
 
         return BANKS.size();
-    }
-
-    /**
-     * Returns the list of registered banks.
-     * @return the list of banks
-     */
-    public static ArrayList<Bank> getBANKS() {
-
-        if (BANKS == null) {
-            BANKS = new ArrayList<>();
-            return BANKS;
-        } else if (BANKS.isEmpty()) {
-            return BANKS;
-        }
-        return BANKS;
-    }
-
-    /**
-     * Returns the currently logged-in bank.
-     * @return the logged bank
-     */
-    public static Bank getLoggedBank() {
-
-        return loggedBank;
-    }
-
-    /**
-     * Sets the currently logged-in bank.
-     * @param loggedBank the bank to set as logged in
-     */
-    public static void setLoggedBank(Bank loggedBank) {
-
-        BankLauncher.loggedBank = loggedBank;
     }
 }
