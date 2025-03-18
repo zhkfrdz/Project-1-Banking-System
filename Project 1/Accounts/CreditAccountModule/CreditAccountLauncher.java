@@ -8,7 +8,12 @@ import Main.Main;
 
 public class CreditAccountLauncher extends AccountLauncher {
 
+    /**
+     * Initializes the credit account menu and handles user interactions.
+     * @throws IllegalAccountType if the account type is invalid
+     */
     public static void creditAccountInit() throws IllegalAccountType {
+
         while (true) {
             try {
                 Main.showMenuHeader("Credit Account Menu");
@@ -40,7 +45,12 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Processes a payment to another account.
+     * @throws IllegalAccountType if the account type is invalid
+     */
     private static void creditPaymentProcess() throws IllegalAccountType {
+
         CreditAccount loggedAccount = getLoggedAccount();
         String accNum = Main.prompt("Account number: ", true);
         double amount = Double.parseDouble(Main.prompt("Amount: ", true));
@@ -54,7 +64,11 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Handles recompensing an amount against the logged credit account.
+     */
     private static void creditRecompenseProcess() {
+
         CreditAccount loggedAccount = getLoggedAccount();
         if (loggedAccount == null) {
             System.out.println("No credit account logged in.");
@@ -85,7 +99,12 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Retrieves the currently logged credit account.
+     * @return the logged CreditAccount, or null if not logged in
+     */
     protected static CreditAccount getLoggedAccount() {
+
         // Attempt to obtain the logged account
         Account account = AccountLauncher.getLoggedAccount();
 

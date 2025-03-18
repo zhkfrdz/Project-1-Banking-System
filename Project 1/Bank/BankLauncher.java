@@ -13,11 +13,20 @@ public class BankLauncher {
     private static ArrayList<Bank> BANKS = new ArrayList<>();
     private static Bank loggedBank = null;
 
+    /**
+     * Checks if a bank is currently logged in.
+     * @return true if a bank is logged in, false otherwise
+     */
     public static boolean isLogged() {
+
         return loggedBank != null;
     }
 
+    /**
+     * Initializes the bank login process and displays the bank menu.
+     */
     public static void bankInit() {
+
         bankLogin();
         if (isLogged()) {
             boolean menuContinue = true;
@@ -53,7 +62,11 @@ public class BankLauncher {
         }
     }
 
+    /**
+     * Displays the accounts of the logged-in bank.
+     */
     public static void showAccounts() {
+
         while (true) {
             Main.showMenuHeader("Show Accounts");
             Main.showMenu(32);
@@ -80,7 +93,11 @@ public class BankLauncher {
         }
     }
 
+    /**
+     * Prompts for bank name and PIN to log in.
+     */
     public static void bankLogin() {
+
         Main.showMenuHeader("Bank Login");
         String bankName = Main.prompt("Enter bank name: ", true);
         String pin = Main.prompt("Enter PIN: ", true);
@@ -96,7 +113,11 @@ public class BankLauncher {
         }
     }
 
+    /**
+     * Prompts for account type and creates a new account.
+     */
     private static void newAccounts() {
+
         Main.showMenuHeader("New Account Type");
         Main.showMenu(33);
         Main.setOption();
@@ -115,7 +136,12 @@ public class BankLauncher {
         }
     }
 
+    /**
+     * Sets the logged-in bank session.
+     * @param b the bank to log in
+     */
     private static void setLogSession(Bank b) {
+
         // Checks if another bank account is already logged in
         if (isLogged()) {
             System.out.println("Another bank account is currently logged in");
@@ -127,12 +153,20 @@ public class BankLauncher {
     }
 
     // Janos and Mia here
+    /**
+     * Logs out the current bank session.
+     */
     private static void logout() {
+
         loggedBank = null;
         System.out.println("Logout successful. Session destroyed.");
     }
 
+    /**
+     * Prompts for details to create a new bank.
+     */
     public static void createNewBank() {
+
         Main.showMenuHeader("Create New Bank");
         Field<Integer,Integer> idField = new Field<>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
         Field<String,String> nameField = new Field<>("Name", String.class, "", new Field.StringFieldValidator());
@@ -174,7 +208,11 @@ public class BankLauncher {
         addBank(newBank);
     }
 
+    /**
+     * Displays the list of registered banks.
+     */
     public static void showBanksMenu() {
+
         if (BANKS == null || BANKS.isEmpty()) {
             System.out.println("No banks registered or created.");
             return;
@@ -191,12 +229,24 @@ public class BankLauncher {
         }
     }
 
+    /**
+     * Adds a new bank to the list of banks.
+     * @param b the bank to add
+     */
     private static void addBank(Bank b) {
+
         BANKS.add(b);
     }
 
     // Janos and Mia here
+    /**
+     * Retrieves a bank based on a comparator.
+     * @param comparator the comparator to use for comparison
+     * @param bank the bank to find
+     * @return the matching bank, or null if not found
+     */
     public static Bank getBank(Comparator<Bank> comparator, Bank bank) {
+
         for (Bank registeredBank : BANKS) {
             if (comparator.compare(registeredBank, bank) == 0) {
                 return registeredBank;
@@ -205,7 +255,13 @@ public class BankLauncher {
         return null;
     }
 
+    /**
+     * Finds an account by account number across all banks.
+     * @param accountNum the account number to find
+     * @return the account if found, null otherwise
+     */
     public static Account findAccount(String accountNum) {
+
         for (Bank bank : getBANKS()) {
             if (Bank.accountExists(bank, accountNum) == true){
                 return bank.getBankAccount(bank, accountNum);
@@ -215,11 +271,21 @@ public class BankLauncher {
         return null;
     }
 
+    /**
+     * Returns the number of registered banks.
+     * @return the size of the bank list
+     */
     public static int bankSize() {
+
         return BANKS.size();
     }
 
+    /**
+     * Returns the list of registered banks.
+     * @return the list of banks
+     */
     public static ArrayList<Bank> getBANKS() {
+
         if (BANKS == null) {
             BANKS = new ArrayList<>();
             return BANKS;
@@ -229,11 +295,21 @@ public class BankLauncher {
         return BANKS;
     }
 
+    /**
+     * Returns the currently logged-in bank.
+     * @return the logged bank
+     */
     public static Bank getLoggedBank() {
+
         return loggedBank;
     }
 
+    /**
+     * Sets the currently logged-in bank.
+     * @param loggedBank the bank to set as logged in
+     */
     public static void setLoggedBank(Bank loggedBank) {
+
         BankLauncher.loggedBank = loggedBank;
     }
 }

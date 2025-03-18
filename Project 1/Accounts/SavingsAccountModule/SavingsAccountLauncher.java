@@ -10,7 +10,12 @@ import Main.Main;
 
 public class SavingsAccountLauncher extends AccountLauncher {
 
+    /**
+     * Initializes the savings account menu and handles user interactions.
+     * @throws IllegalAccountType if the account type is invalid
+     */
     public static void savingsAccountInit() throws IllegalAccountType {
+
         while (true) {
             try {
                 Main.showMenuHeader("Savings Account Menu");
@@ -45,7 +50,11 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Processes a deposit into the logged savings account.
+     */
     private static void depositProcess() {
+
         SavingsAccount loggedAccount = getLoggedAccount();
 
         if (loggedAccount == null) {
@@ -80,7 +89,11 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Handles withdrawal from the logged savings account.
+     */
     private static void withdrawProcess() {
+
 
         SavingsAccount loggedAccount = getLoggedAccount();
         // Check if a savings account is logged in
@@ -110,7 +123,12 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Manages fund transfers, both internal and external.
+     * @throws IllegalAccountType if the account type is invalid
+     */
     private static void fundTransferProcess() throws IllegalAccountType {
+
         SavingsAccount loggedAccount = getLoggedAccount();
 
         System.out.println("[1] Internal transfer \n[2] External transfer");
@@ -152,7 +170,12 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * Retrieves the currently logged savings account.
+     * @return the logged SavingsAccount, or null if not logged in
+     */
     protected static SavingsAccount getLoggedAccount() {
+
         Account account = AccountLauncher.getLoggedAccount();
         if (account instanceof SavingsAccount) {
             return (SavingsAccount) account;
