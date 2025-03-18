@@ -1,32 +1,35 @@
-//import Accounts.Account;
-//import Accounts.CreditAccount;
-//import Accounts.SavingsAccount;
-//import Bank.Bank;
-//import Bank.BankLauncher;
-//import org.junit.Assert;
-//import org.junit.Test;
-//import org.junit.jupiter.api.AfterEach;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.TestInstance;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.InputStream;
-//
-//@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-//public class TestBank {
-//
-//    private final InputStream or = System.in;
-//
-//    @BeforeEach
-//    public void reset() {
-//        System.setIn(or);
-//    }
-//
-//    @AfterEach
-//    public void restore() {
-//        System.setIn(or);
-//    }
-//
+package Tests.Tests;
+
+import Accounts.Account;
+import Accounts.CreditAccountModule.CreditAccount;
+import Accounts.SavingsAccountModule.SavingsAccount;
+import Bank.Bank;
+import Bank.BankLauncher;
+import Bank.BankIdComparator;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+public class TestBank {
+
+    private final InputStream or = System.in;
+
+    @BeforeEach
+    public void reset() {
+        System.setIn(or);
+    }
+
+    @AfterEach
+    public void restore() {
+        System.setIn(or);
+    }
+
 //    @Test
 //    public void test1() {
 //        InputStream original = System.in;
@@ -41,58 +44,58 @@
 //
 //            BankLauncher.createNewBank();
 //
-//            Bank bank = BankLauncher.getBank(new Bank.BankIdComparator(), new Bank(0, "Land Bank of the Philippens", "12345678"));
+//            Bank bank = BankLauncher.getBank(new BankIdComparator(), new Bank(0, "Land Bank of the Philippens", "12345678"));
 //
 //            Assert.assertEquals("Land Bank of the Philippines", bank.getName());
-//            Assert.assertEquals(100000.0, bank.getCreditLimit(), 0.00001);
-//            Assert.assertEquals(50000.0, bank.getDepositLimit(), 0.00001);
-//            Assert.assertEquals(50000.0, bank.getDepositLimit(), 0.00001);
+//            Assert.assertEquals(100000.0, bank.getCREDITLIMIT(), 0.00001);
+//            Assert.assertEquals(50000.0, bank.getDEPOSITLIMIT(), 0.00001);
+//            Assert.assertEquals(50000.0, bank.getDEPOSITLIMIT(), 0.00001);
 //            Assert.assertEquals(1, BankLauncher.bankSize());
 //        } finally {
 //            System.setIn(original);
 //        }
 //    }
-//
-//    @Test
-//    public void test2() {
-//        InputStream original = System.in;
-//
-//        try {
-//            String in1 = "Land Bank of the Philippines\n12345678\n50000.0\n50000.0\n100000.0\n10.0\n";
-//            String in2 = "Iglesia ni Dulay\n001122\n75000.0\n75000.0\n150000.0\n10.0\n";
-//
-//            String myinput = in1 + in2;
-//
-//            ByteArrayInputStream instream1 = new ByteArrayInputStream(myinput.getBytes());
-//
-//            // Create first bank
-//            System.setIn(instream1);
-//            BankLauncher.createNewBank();
-//            // Create second bank
-//            BankLauncher.createNewBank();
-//
-//            // Get two banks
-//            Bank bank1 = BankLauncher.getBank(new Bank.BankIdComparator(), new Bank(0, null, null));
-//            Bank bank2 = BankLauncher.getBank(new Bank.BankIdComparator(), new Bank(1, null, null));
-//
-//            Assert.assertEquals(2, BankLauncher.bankSize());
-//
-//            // Test Bank 1 values
-//            Assert.assertEquals("Land Bank of the Philippines", bank1.getName());
-//            Assert.assertEquals(100000.0, bank1.getCreditLimit(), 0.00001);
-//            Assert.assertEquals(50000.0, bank1.getDepositLimit(), 0.00001);
-//            Assert.assertEquals(50000.0, bank1.getDepositLimit(), 0.00001);
-//
-//            // Test Bank 2 values
-//            Assert.assertEquals("Iglesia ni Dulay", bank2.getName());
-//            Assert.assertEquals(150000.0, bank2.getCreditLimit(), 0.00001);
-//            Assert.assertEquals(75000.0, bank2.getDepositLimit(), 0.00001);
-//            Assert.assertEquals(75000.0, bank2.getDepositLimit(), 0.00001);
-//        } finally {
-//            System.setIn(original);
-//        }
-//    }
-//
+
+    @Test
+    public void test2() {
+        InputStream original = System.in;
+
+        try {
+            String in1 = "Land Bank of the Philippines\n12345678\n50000.0\n50000.0\n100000.0\n10.0\n";
+            String in2 = "Iglesia ni Dulay\n001122\n75000.0\n75000.0\n150000.0\n10.0\n";
+
+            String myinput = in1 + in2;
+
+            ByteArrayInputStream instream1 = new ByteArrayInputStream(myinput.getBytes());
+
+            // Create first bank
+            System.setIn(instream1);
+            BankLauncher.createNewBank();
+            // Create second bank
+            BankLauncher.createNewBank();
+
+            // Get two banks
+            Bank bank1 = BankLauncher.getBank(new BankIdComparator(), new Bank(0, null, null));
+            Bank bank2 = BankLauncher.getBank(new BankIdComparator(), new Bank(1, null, null));
+
+            Assert.assertEquals(2, BankLauncher.bankSize());
+
+            // Test Bank 1 values
+            Assert.assertEquals("Land Bank of the Philippines", bank1.getName());
+            Assert.assertEquals(100000.0, bank1.getCREDITLIMIT(), 0.00001);
+            Assert.assertEquals(50000.0, bank1.getDEPOSITLIMIT(), 0.00001);
+            Assert.assertEquals(50000.0, bank1.getDEPOSITLIMIT(), 0.00001);
+
+            // Test Bank 2 values
+            Assert.assertEquals("Iglesia ni Dulay", bank2.getName());
+            Assert.assertEquals(150000.0, bank2.getCREDITLIMIT(), 0.00001);
+            Assert.assertEquals(75000.0, bank2.getDEPOSITLIMIT(), 0.00001);
+            Assert.assertEquals(75000.0, bank2.getDEPOSITLIMIT(), 0.00001);
+        } finally {
+            System.setIn(original);
+        }
+    }
+
 //    // Test Create an Account
 //    @Test
 //    public void test3() {
@@ -129,13 +132,13 @@
 //
 //            Assert.assertEquals("John Doe", saccount.getOwnerFullName());
 //            Assert.assertEquals(500.0, ((SavingsAccount) saccount).getAccountBalance(), 0.00001);
-//            Assert.assertEquals("jd@gmail.com", saccount.getOwnerEmail());
+//            Assert.assertEquals("jd@gmail.com", saccount.getOWNEREMAIL());
 //
 //            Assert.assertEquals("Jane Doe", caccount.getOwnerFullName());
 //            Assert.assertEquals(0.0, ((CreditAccount) caccount).getLoan(), 0.00001);
-//            Assert.assertEquals("janed@gmail.com", caccount.getOwnerEmail());
+//            Assert.assertEquals("janed@gmail.com", caccount.getOWNEREMAIL());
 //        } finally {
 //            System.setIn(original);
 //        }
 //    }
-//}
+}

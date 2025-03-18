@@ -171,4 +171,8 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
             return false;
         }
     }
+
+    public double getAccountBalance() {
+        return this.balance;
+    }
 }
