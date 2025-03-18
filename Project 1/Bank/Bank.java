@@ -12,7 +12,7 @@ public class Bank {
     private int ID;
     private String name, passcode;
     private final double DEPOSITLIMIT, WITHDRAWLIMIT, CREDITLIMIT;
-    private double PROCESSINGFEE;
+    private double processingFee;
     private final ArrayList<Account> BANKACCOUNTS;
 
     /**
@@ -29,7 +29,7 @@ public class Bank {
         this.DEPOSITLIMIT = 50000.0;
         this.WITHDRAWLIMIT = 50000.0;
         this.CREDITLIMIT = 100000.0;
-        this.PROCESSINGFEE = 10.0;
+        this.processingFee = 10.0;
         this.BANKACCOUNTS = new ArrayList<>();
     }
 
@@ -51,7 +51,7 @@ public class Bank {
         this.DEPOSITLIMIT = DEPOSITLIMIT;
         this.WITHDRAWLIMIT = WITHDRAWLIMIT;
         this.CREDITLIMIT = CREDITLIMIT;
-        this.PROCESSINGFEE = PROCESSINGFEE;
+        this.processingFee = PROCESSINGFEE;
         this.BANKACCOUNTS = new ArrayList<>();
     }
 
@@ -140,9 +140,9 @@ public class Bank {
      * Returns the processing fee.
      * @return the processing fee
      */
-    public double getPROCESSINGFEE() {
+    public double getProcessingFee() {
 
-        return PROCESSINGFEE;
+        return processingFee;
     }
 
     /**
@@ -303,11 +303,11 @@ public class Bank {
         Bank bank = BankLauncher.getLoggedBank();
         CreditAccount credit;
 
-        String firstName = (String) fields.get(0).getFieldValue();
-        String lastName = (String) fields.get(1).getFieldValue();
-        String email = (String) fields.get(2).getFieldValue();
-        String accountNum = (String) fields.get(3).getFieldValue();
-        String pin = (String) fields.get(4).getFieldValue();
+        String firstName = fields.get(0).getFieldValue();
+        String lastName = fields.get(1).getFieldValue();
+        String email = fields.get(2).getFieldValue();
+        String accountNum = fields.get(3).getFieldValue();
+        String pin = fields.get(4).getFieldValue();
 
         credit = new CreditAccount(bank, accountNum, firstName, lastName, email, pin, CREDITLIMIT);
         System.out.println("Account created successfully!");
@@ -327,11 +327,11 @@ public class Bank {
         Bank bank = BankLauncher.getLoggedBank();
         SavingsAccount savings;
 
-        String firstName = (String) fields.get(0).getFieldValue();
-        String lastName = (String) fields.get(1).getFieldValue();
-        String email = (String) fields.get(2).getFieldValue();
-        String accountNum = (String) fields.get(3).getFieldValue();
-        String pin = (String) fields.get(4).getFieldValue();
+        String firstName = fields.get(0).getFieldValue();
+        String lastName = fields.get(1).getFieldValue();
+        String email = fields.get(2).getFieldValue();
+        String accountNum = fields.get(3).getFieldValue();
+        String pin = fields.get(4).getFieldValue();
 
         while (true) {
             Field<Double, Double> initialBalanceField = new Field<>("InitialBalance", Double.class, 0.0, new Field.DoubleFieldValidator());
@@ -363,7 +363,7 @@ public class Bank {
             throw new NullPointerException("The account cannot be null.");
         }
 
-        String accountNumStr = account.getAccountNumber().toString();
+        String accountNumStr = account.getAccountNumber();
         if (accountExists(this, accountNumStr)) {
             throw new IllegalArgumentException(
                     "An account with the same account number " +
@@ -383,7 +383,7 @@ public class Bank {
     public static boolean accountExists(Bank bank, String accountNum) {
 
         for (Account accs : bank.getBANKACCOUNTS()) {
-            if (accs.getAccountNumber().toString().equals(accountNum)) {
+            if (accs.getAccountNumber().equals(accountNum)) {
                 return true;
             }
         }
@@ -396,12 +396,12 @@ public class Bank {
      */
     public String toString() {
 
-        String res = "Bank Name: " + name + "\n";
+        StringBuilder res = new StringBuilder("Bank Name: " + name + "\n");
 
         int i = 0;
         while (i < BANKACCOUNTS.size()) {
             Account account = BANKACCOUNTS.get(i);
-            String accountType = "";
+            String accountType;
 
             if (account instanceof CreditAccount) {
                 accountType = "Credit Account";
@@ -413,10 +413,10 @@ public class Bank {
                 accountType = "Account Type not listed in Bank!";
             }
 
-            res += "Account Type: " + accountType + "\n";
-            res += "Account Details: " + account.toString() + "\n";
+            res.append("Account Type: ").append(accountType).append("\n");
+            res.append("Account Details: ").append(account.toString()).append("\n");
             i++;
         }
-        return res;
+        return res.toString();
     }
 }

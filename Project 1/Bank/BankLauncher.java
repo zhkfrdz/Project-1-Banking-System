@@ -98,7 +98,7 @@ public class BankLauncher {
     public static void bankLogin() {
 
         Main.showMenuHeader("Bank Login");
-        String bankName = Main.prompt("Enter bank name: ", true);
+        String bankName = Main.prompt("Enter Bank Name: ", true);
         String pin = Main.prompt("Enter PIN: ", true);
 
         for (Bank bank : BANKS) {

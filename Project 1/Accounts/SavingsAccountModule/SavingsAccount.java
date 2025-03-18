@@ -112,7 +112,7 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
     public boolean transfer(Bank bank, Account account, double amount) throws IllegalAccountType {
 
         if (account instanceof SavingsAccount) {
-            withdrawal(amount + bank.getPROCESSINGFEE());
+            withdrawal(amount + bank.getProcessingFee());
             ((SavingsAccount) bank.getBankAccount(bank, account.getAccountNumber())).cashDeposit(amount);
             return true;
         } else {

@@ -10,9 +10,8 @@ public class CreditAccountLauncher extends AccountLauncher {
 
     /**
      * Initializes the credit account menu and handles user interactions.
-     * @throws IllegalAccountType if the account type is invalid
      */
-    public static void creditAccountInit() throws IllegalAccountType {
+    public static void creditAccountInit() {
 
         while (true) {
             try {

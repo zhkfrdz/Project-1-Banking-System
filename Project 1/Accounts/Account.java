@@ -132,16 +132,16 @@ public abstract class Account {
      */
     public String getTransactionsInfo() {
 
-        String transactionsInfo = "Transactions for the Account Number: " + ACCOUNTNUMBER + "\n";
+        StringBuilder transactionsInfo = new StringBuilder("Transactions for the Account Number: " + ACCOUNTNUMBER + "\n");
 
         int i = 0;
         while (i < TRANSACTIONS.size()) {
             Transaction transaction = TRANSACTIONS.get(i);
-            transactionsInfo += "Transaction Type: " + transaction.transactionType + "\n";
-            transactionsInfo += "Description: " + transaction.description + "\n";
+            transactionsInfo.append("Transaction Type: ").append(transaction.transactionType).append("\n");
+            transactionsInfo.append("Description: ").append(transaction.description).append("\n");
             i++;
         }
-        return transactionsInfo;
+        return transactionsInfo.toString();
     }
 
     /**
@@ -151,27 +151,27 @@ public abstract class Account {
     public String toString() {
 
         //Initialize the string with a header
-        String accountInfo = "Account Information:\n";
+        StringBuilder accountInfo = new StringBuilder("Account Information:\n");
 
         //Append bank information or indicate if not available
-        accountInfo += String.format("Bank:\n%s", bank != null ? bank.toString() : "No bank information available") + "\n";
+        accountInfo.append(String.format("Bank:\n%s", bank != null ? bank.toString() : "No bank information available")).append("\n");
         //Append account details
-        accountInfo += String.format("Account Number: %s\n", ACCOUNTNUMBER);
-        accountInfo += String.format("Owner: %s\n", getOwnerFullName());
-        accountInfo += String.format("Owner Email: %s\n", OWNEREMAIL);
-        accountInfo += String.format("PIN: %s\n", pin);
+        accountInfo.append(String.format("Account Number: %s\n", ACCOUNTNUMBER));
+        accountInfo.append(String.format("Owner: %s\n", getOwnerFullName()));
+        accountInfo.append(String.format("Owner Email: %s\n", OWNEREMAIL));
+        accountInfo.append(String.format("PIN: %s\n", pin));
 
         //Append transaction details or indicate if no transactions available
-        if (TRANSACTIONS != null && !TRANSACTIONS.isEmpty()) {
-            accountInfo += "Transactions:\n";
+        if (!TRANSACTIONS.isEmpty()) {
+            accountInfo.append("Transactions:\n");
             for (Transaction transaction : TRANSACTIONS) {
-                accountInfo += String.format("- %s\n", transaction != null ? transaction.toString() : "Invalid Transaction");
+                accountInfo.append(String.format("- %s\n", transaction != null ? transaction.toString() : "Invalid Transaction"));
             }
         } else {
-            accountInfo += "No transactions available.\n";
+            accountInfo.append("No transactions available.\n");
         }
         // Return the final string representation
-        return accountInfo;
+        return accountInfo.toString();
     }
 
 

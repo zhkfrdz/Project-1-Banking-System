@@ -48,11 +48,10 @@ public class CreditAccount extends Account implements Payment, Recompense {
      */
     public String getLoanStatement() {
 
-        String loan_statement = "Loan Statement:\n" +
+        return "Loan Statement:\n" +
                 "Owner: " + getOwnerFullName() + "\n" +
                 "Account Number: " + getAccountNumber() + "\n" +
                 "Loan Amount: " + loan + "\n";
-        return loan_statement;
     }
 
     /**
@@ -91,13 +90,11 @@ public class CreditAccount extends Account implements Payment, Recompense {
 
         String format = String.format("%.2f", loan);
 
-        String account_statement = "Account Balance Statement:\n" +
+        return "Account Balance Statement:\n" +
                 "Account Number: " + getAccountNumber() + "\n" +
                 "Owner: " + getOwnerFullName() + "\n" +
                 "Email: " + getOWNEREMAIL() + "\n" +
                 "Balance: " + format + "\n";
-
-        return account_statement;
     }
 
     /**
@@ -135,13 +132,11 @@ public class CreditAccount extends Account implements Payment, Recompense {
         }
 
         if (getBank() != account.getBank()) {
-            adjustLoanAmount(amount + getBank().getPROCESSINGFEE());
-            ((SavingsAccount) account).cashDeposit(amount);
-            return true;
+            adjustLoanAmount(amount + getBank().getProcessingFee());
         } else {
             adjustLoanAmount(amount);
-            ((SavingsAccount) account).cashDeposit(amount);
-            return true;
         }
+        ((SavingsAccount) account).cashDeposit(amount);
+        return true;
     }
 }
