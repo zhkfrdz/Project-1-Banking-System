@@ -21,20 +21,10 @@ public class AccountLauncher {
         AccountLauncher.assocBank = assocBank;
     }
 
-    /**
-     * Checks if a user is currently logged in by verifying the presence of a logged account.
-     *
-     * @return true if a user is logged in, false otherwise
-     */
     private static boolean isLoggedIn() {
         return loggedAccount != null;
     }
 
-    /**
-     * A function to handle account login.
-     * @throws IllegalAccountType
-     *
-     */
     public static void accountLogin() throws IllegalAccountType {
         Main.showMenuHeader("Account Login");
         if (isLoggedIn()) {
@@ -73,12 +63,6 @@ public class AccountLauncher {
         }
     }
 
-    /**
-     * Bank selection screen before the user is prompted to login. User is prompted for the Bank ID
-     * with corresponding bank name.
-     *
-     * @return Bank object based on selected ID
-     */
     private static Bank selectBank() {
         Main.showMenuHeader("Bank Selection");
         BankLauncher.showBanksMenu();
@@ -98,19 +82,10 @@ public class AccountLauncher {
         return null;
     }
 
-    /**
-     * Sets the log session for the given account.
-     *
-     * @param  account   the account for which the log session is being set
-     */
     private static void setLogSession(Account account) {
         System.out.println("Session created for account number  " + loggedAccount.getAccountNumber());
     }
 
-    /**
-     * Destroys the current log session if a user is logged in, resetting the loggedAccount to null.
-     * Prints relevant messages indicating the success or absence of a log session.
-     */
     private static void destroyLogSession() {
         // Check if a user is logged in
         if (isLoggedIn()) {
@@ -129,14 +104,6 @@ public class AccountLauncher {
         }
     }
 
-    /**
-     * Checks inputted credentials during account login.
-     *
-     * @param accountNum – Account number.
-     * @param pin – 4-digit pin.
-     *
-     * @return Account object if it passes verification. Null if not.
-     */
     public static Account checkCredentials(String accountNum, String pin) {
         Account selAccount = assocBank.getBankAccount(assocBank, accountNum);
         if (selAccount != null && selAccount.getAccountNumber().equals(accountNum) && selAccount.getPin().equals(pin)) {
@@ -147,11 +114,6 @@ public class AccountLauncher {
         }
     }
 
-    /**
-     * Retrieves the currently logged in account.
-     *
-     * @return the logged in account
-     */
     protected static Account getLoggedAccount() {
         return loggedAccount;
     }

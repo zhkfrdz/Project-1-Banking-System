@@ -13,18 +13,10 @@ public class BankLauncher {
     private static ArrayList<Bank> BANKS = new ArrayList<>();
     private static Bank loggedBank = null;
 
-    /**
-     * Checks if the user is logged in by verifying if the loggedBank object is not null.
-     *
-     * @return  true if the user is logged in, false otherwise
-     */
     public static boolean isLogged() {
         return loggedBank != null;
     }
 
-    /**
-     * This function initializes the bank system, logs in the user, and displays a menu for bank operations.
-     */
     public static void bankInit() {
         bankLogin();
         if (isLogged()) {
@@ -61,9 +53,6 @@ public class BankLauncher {
         }
     }
 
-    /**
-     * Show accounts based on user input.
-     */
     public static void showAccounts() {
         while (true) {
             Main.showMenuHeader("Show Accounts");
@@ -91,12 +80,6 @@ public class BankLauncher {
         }
     }
 
-    /**
-     * Performs the bank login process by prompting the user for the bank name and PIN.
-     * It checks if the provided bank name and PIN match any of the registered banks.
-     * If a match is found, it sets the logged bank session.
-     * If no match is found, it displays an error message.
-     */
     public static void bankLogin() {
         Main.showMenuHeader("Bank Login");
         String bankName = Main.prompt("Enter bank name: ", true);
@@ -113,10 +96,6 @@ public class BankLauncher {
         }
     }
 
-    /**
-     * Prompts the user to create a new account and adds it to the logged-in bank.
-     * Displays a menu for selecting the type of account (credit or savings) to create.
-     */
     private static void newAccounts() {
         Main.showMenuHeader("New Account Type");
         Main.showMenu(33);
@@ -136,13 +115,6 @@ public class BankLauncher {
         }
     }
 
-    /**
-     * Sets up a new login session for the logged-in bank user.
-     * If another bank account is already logged in, prints a message and returns.
-     * Otherwise, sets the provided bank as the logged-in bank and prints a success message.
-     *
-     * @param b The bank user that successfully logged in.
-     */
     private static void setLogSession(Bank b) {
         // Checks if another bank account is already logged in
         if (isLogged()) {
@@ -160,15 +132,6 @@ public class BankLauncher {
         System.out.println("Logout successful. Session destroyed.");
     }
 
-    /**
-     * Allows the creation of a new bank by prompting the user to enter the bank name.
-     * If the provided name is empty, it displays an error message and prompts the user again.
-     *
-     * This method displays a menu header for creating a new bank and prompts the user to enter the bank name.
-     * It ensures that the provided name is not empty before proceeding.
-     *
-     * If the user enters an empty name, it displays an error message and prompts the user again until a valid name is provided.
-     */
     public static void createNewBank() {
         Main.showMenuHeader("Create New Bank");
         Field<Integer,Integer> idField = new Field<>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
@@ -211,9 +174,6 @@ public class BankLauncher {
         addBank(newBank);
     }
 
-    /**
-     * Displays the menu of registered banks, showing each bank's name, ID, and position in the list.
-     */
     public static void showBanksMenu() {
         if (BANKS == null || BANKS.isEmpty()) {
             System.out.println("No banks registered or created.");
@@ -231,12 +191,6 @@ public class BankLauncher {
         }
     }
 
-    /**
-     * Add a bank to the list of banks.
-     *
-     * @param  b    the bank to be added
-     * @return      void
-     */
     private static void addBank(Bank b) {
         BANKS.add(b);
     }
@@ -251,16 +205,6 @@ public class BankLauncher {
         return null;
     }
 
-    /**
-     * Finds the Account object based on the provided account number across all registered banks.
-     *
-     * @param accountNum The account number of the target Account.
-     * @return The Account object if it exists, or null if not found.
-     *
-     * This method iterates through all registered banks and checks if the provided account number exists in each bank.
-     * If the account number exists in any bank, it retrieves the corresponding Account object using the bank's method
-     * `getBankAccount()`. It returns the found Account object. If the account number is not found in any bank, it returns null.
-     */
     public static Account findAccount(String accountNum) {
         for (Bank bank : getBANKS()) {
             if (Bank.accountExists(bank, accountNum) == true){
@@ -271,20 +215,10 @@ public class BankLauncher {
         return null;
     }
 
-    /**
-     * Retrieves the size of the bank.
-     *
-     * @return         	the size of the bank
-     */
     public static int bankSize() {
         return BANKS.size();
     }
 
-    /**
-     * A description of the entire Java function.
-     *
-     * @return         description of return value
-     */
     public static ArrayList<Bank> getBANKS() {
         if (BANKS == null) {
             BANKS = new ArrayList<>();
@@ -295,20 +229,10 @@ public class BankLauncher {
         return BANKS;
     }
 
-    /**
-     * Retrieves the currently logged-in bank instance.
-     *
-     * @return The logged-in bank instance.
-     */
     public static Bank getLoggedBank() {
         return loggedBank;
     }
 
-    /**
-     * Sets the logged bank.
-     *
-     * @param  loggedBank the bank to be set as logged
-     */
     public static void setLoggedBank(Bank loggedBank) {
         BankLauncher.loggedBank = loggedBank;
     }

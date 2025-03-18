@@ -10,13 +10,6 @@ import Main.Main;
 
 public class SavingsAccountLauncher extends AccountLauncher {
 
-
-    /**
-     * Initializes the savings account functionality for the currently logged-in user.
-     * Prints the account balance statement if a savings account is logged in.
-     * Otherwise, prints a message indicating that no account is logged in.
-     * @throws IllegalAccountType
-     */
     public static void savingsAccountInit() throws IllegalAccountType {
         while (true) {
             try {
@@ -52,11 +45,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
-
-    /**
-     * A description of the entire Java function.
-     *
-     */
     private static void depositProcess() {
         SavingsAccount loggedAccount = getLoggedAccount();
 
@@ -92,12 +80,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
-
-    /**
-     * Initiates the withdrawal process for the logged-in savings account.
-     * Prompts the user to enter the withdrawal amount and performs the withdrawal if the amount is valid and sufficient.
-     * Prints appropriate messages indicating the success or failure of the withdrawal process.
-     */
     private static void withdrawProcess() {
 
         SavingsAccount loggedAccount = getLoggedAccount();
@@ -128,11 +110,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
-    /**
-     * A method that deals with the fund transfer process transaction.
-     *
-     * @throws IllegalAccountType
-     */
     private static void fundTransferProcess() throws IllegalAccountType {
         SavingsAccount loggedAccount = getLoggedAccount();
 
@@ -175,11 +152,6 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
-    /**
-     * Method to get the currently logged Savings Account
-     *
-     * @return Savings Account instance of the currently logged account.
-     */
     protected static SavingsAccount getLoggedAccount() {
         Account account = AccountLauncher.getLoggedAccount();
         if (account instanceof SavingsAccount) {

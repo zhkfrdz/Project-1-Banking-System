@@ -81,12 +81,6 @@ public class Bank {
         return BANKACCOUNTS;
     }
 
-    /**
-     * Show accounts of the specified account type, sorted based on the type of account.
-     *
-     * @param  accountType	The class of the account type to be shown
-     * @return         		void
-     */
     public <T> void showAccounts(Class<T> accountType) {
         if (accountType == Account.class) {
             for (Account account : getBANKACCOUNTS()) {
@@ -101,13 +95,6 @@ public class Bank {
         }
     }
 
-    /**
-     * Retrieves a bank account from the specified bank using the account number.
-     *
-     * @param  bank       the bank from which to retrieve the account
-     * @param  accountNum the account number of the bank account
-     * @return            the bank account with the specified account number, or null if not found
-     */
     public Account getBankAccount(Bank bank, String accountNum) {
         for (Account accs : BANKACCOUNTS) {
             if (accs.getAccountNumber().equals(accountNum)) {
@@ -117,13 +104,6 @@ public class Bank {
         return null;
     }
 
-    /**
-     * Creates a new account by prompting the user for account type, first name, last name, email, username, and pin.
-     *
-     * @throws NumberFormatException       if the input is not a valid number format
-     * @throws IllegalArgumentException    if the input violates a condition
-     * @return                            an ArrayList of Field objects representing the user's input
-     */
     public ArrayList<Field<String, ?>> createNewAccount() throws IllegalArgumentException {
         FieldValidator<String, String> validateString = new Field.StringFieldValidator();
         ArrayList<Field<String, ?>> createNew = new ArrayList<>();
@@ -222,11 +202,6 @@ public class Bank {
         return createNew;
     }
 
-    /**
-     * Create a new credit account for the bank customer.
-     *
-     * @return         	The newly created CreditAccount
-     */
     public CreditAccount createNewCreditAccount() {
         ArrayList<Field<String, ?>> fields = createNewAccount();
         Bank bank = BankLauncher.getLoggedBank();
@@ -243,11 +218,6 @@ public class Bank {
         return credit;
     }
 
-    /**
-     * Creates a new savings account with the provided information and initial balance.
-     *
-     * @return         	the newly created SavingsAccount
-     */
     public SavingsAccount createNewSavingsAccount() {
         //Create a new account using the common account creation method
         ArrayList<Field<String, ?>> fields = createNewAccount();
@@ -280,11 +250,6 @@ public class Bank {
         }
     }
 
-    /**
-     * Adds a new account to the bank accounts list if it doesn't already exist.
-     *
-     * @param  account   the account to be added
-     */
     public void addNewAccount(Account account) throws IllegalArgumentException, NullPointerException {
         if (account == null) {
             throw new NullPointerException("The account cannot be null.");
@@ -301,13 +266,6 @@ public class Bank {
         BANKACCOUNTS.add(account);
     }
 
-    /**
-     * Check if the account exists in the bank.
-     *
-     * @param  bank       the bank object
-     * @param  accountNum the account number
-     * @return           true if the account exists, false otherwise
-     */
     public static boolean accountExists(Bank bank, String accountNum) {
         for (Account accs : bank.getBANKACCOUNTS()) {
             if (accs.getAccountNumber().toString().equals(accountNum)) {
@@ -317,11 +275,6 @@ public class Bank {
         return false;
     }
 
-    /**
-     * Returns a string representation of the entire object, including bank name and account details.
-     *
-     * @return         	string representation of the object
-     */
     public String toString() {
         String res = "Bank Name: " + name + "\n";
 
@@ -344,7 +297,6 @@ public class Bank {
             res += "Account Details: " + account.toString() + "\n";
             i++;
         }
-
         return res;
     }
 }

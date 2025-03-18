@@ -7,11 +7,7 @@ import Accounts.Transaction.Transactions;
 import Main.Main;
 
 public class CreditAccountLauncher extends AccountLauncher {
-    /**
-     * Initializes the credit account and handles the account menu options.
-     *
-     * @throws IllegalAccountType if the account type is invalid
-     */
+
     public static void creditAccountInit() throws IllegalAccountType {
         while (true) {
             try {
@@ -44,11 +40,6 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
-    /**
-     * Processes a credit payment.
-     *
-     * @throws IllegalAccountType if the account type is illegal
-     */
     private static void creditPaymentProcess() throws IllegalAccountType {
         CreditAccount loggedAccount = getLoggedAccount();
         String accNum = Main.prompt("Account number: ", true);
@@ -63,9 +54,6 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
-    /**
-     * Process for recompensing credit to a logged account.
-     */
     private static void creditRecompenseProcess() {
         CreditAccount loggedAccount = getLoggedAccount();
         if (loggedAccount == null) {
@@ -97,14 +85,6 @@ public class CreditAccountLauncher extends AccountLauncher {
         }
     }
 
-
-    /**
-     * Retrieves the currently logged-in CreditAccount, if available.
-     * This method delegates to AccountLauncher.getLoggedAccount() to obtain the logged account,
-     * and returns it if it is an instance of CreditAccount.
-     *
-     * @return the currently logged-in CreditAccount, or null if not available or not a CreditAccount
-     */
     protected static CreditAccount getLoggedAccount() {
         // Attempt to obtain the logged account
         Account account = AccountLauncher.getLoggedAccount();

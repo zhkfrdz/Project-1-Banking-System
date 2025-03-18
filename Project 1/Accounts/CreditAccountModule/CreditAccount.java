@@ -27,17 +27,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         return loan_statement;
     }
 
-    /**
-     * Checks if this credit account can perform a credit transaction without exceeding the credit limit.
-     *
-     * @param amountAdjustment The amount to adjust for the transaction.
-     * @return True if the credit transaction can proceed without exceeding the credit limit, false otherwise.
-     *
-     * This method calculates the new loan amount after adjusting it by the provided amount for the transaction.
-     * It retrieves the credit limit set by the associated bank and compares the new loan amount with the credit limit.
-     * If the new loan amount is less than or equal to the credit limit, it returns true indicating that the credit transaction
-     * can proceed without exceeding the credit limit. Otherwise, it returns false.
-     */
     private boolean canCredit(double amountAdjustment) {
         double newLoan = this.loan + amountAdjustment;
         double creditLimit = this.getBank().getCREDITLIMIT();
@@ -45,11 +34,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         return newLoan <= creditLimit;
     }
 
-    /**
-     * Adjusts the loan amount by the specified amount if it doesn't exceed the credit limit.
-     *
-     * @param  amountAdjustment    the amount to adjust the loan by
-     */
     private void adjustLoanAmount(double amountAdjustment) {
         if (!canCredit(amountAdjustment)) {
             System.out.println("Cannot process: Exceeds credit limit");
@@ -59,12 +43,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         this.loan += amountAdjustment;
     }
 
-    /**
-     * Returns a string representation of the CreditAccount object, including its account number, owner's full name,
-     * and the loan amount.
-     *
-     * @return a formatted string representing the CreditAccount object
-     */
     @Override
     public String toString() {
         String format = String.format("%.2f", loan);
@@ -78,12 +56,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         return account_statement;
     }
 
-    /**
-     * A method to recompense a certain amount of money.
-     *
-     * @param  amount  the amount of money to be recompensed
-     * @return         true if the recompense is successful, false if not
-     */
     @Override
     public boolean recompense(double amount) {
         if (amount <= 0 || amount > this.loan) {
@@ -94,15 +66,6 @@ public class CreditAccount extends Account implements Payment, Recompense {
         return true;
     }
 
-
-    /**
-     * Pay the specified amount to the given account.
-     *
-     * @param  account   the account to pay from
-     * @param  amount    the amount to pay
-     * @return           true if the payment was successful, false otherwise
-     * @throws IllegalAccountType if the account is not a CreditAccount
-     */
     @Override
     public boolean pay(Account account, double amount) throws IllegalAccountType {
         if (account instanceof CreditAccount) {

@@ -47,11 +47,6 @@ public abstract class Account {
         this.TRANSACTIONS = new ArrayList<>();
     }
 
-    /**
-     * Retrieves the full name of the account owner by concatenating the first and last names.
-     *
-     * @return the full name of the account owner
-     */
     public String getOwnerFullName() {
         return this.OWNERFNAME + " " + this.OWNERLNAME;
     }
@@ -62,11 +57,6 @@ public abstract class Account {
         System.out.println("A successful " + type + ".");
     }
 
-    /**
-     * A method to get transactions information.
-     *
-     * @return         	description of the transactions information
-     */
     public String getTransactionsInfo() {
         String transactionsInfo = "Transactions for the Account Number: " + ACCOUNTNUMBER + "\n";
 
@@ -77,16 +67,9 @@ public abstract class Account {
             transactionsInfo += "Description: " + transaction.description + "\n";
             i++;
         }
-
-
         return transactionsInfo;
     }
-    /**
-     * Returns a string representation of the account, including details such as bank information, account number,
-     * owner details, PIN, and a list of transactions if available.
-     *
-     * @return a formatted string containing account information
-     */
+
     public String toString() {
         //Initialize the string with a header
         String accountInfo = "Account Information:\n";
