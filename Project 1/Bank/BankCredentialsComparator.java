@@ -16,20 +16,19 @@ public class BankCredentialsComparator implements Comparator<Bank> {
      */
     @Override
     public int compare(Bank b1, Bank b2) {
-        for (Account account1 : b1.getBANKACCOUNTS()) {
-            for (Account account2 : b2.getBANKACCOUNTS()) {
-                if ((account1.getOWNERFNAME().compareTo(account2.getOWNERFNAME()) < 0)
-                        && (account1.getOWNERLNAME().compareTo(account2.getOWNERLNAME()) < 0)
-                        && (account1.getOWNEREMAIL().compareTo(account2.getOWNEREMAIL()) < 0)) {
-                    return -1; // b1 is less than b2 based on credentials
+        String b1Pass = b1.getPasscode();
+        String b2Pass = b2.getPasscode();
+        String b1Name = b1.getName();
+        String b2Name = b2.getName();
 
-                } else if ((account1.getOWNERFNAME().compareTo(account2.getOWNERFNAME()) > 0)
-                        && (account1.getOWNERLNAME().compareTo(account2.getOWNERLNAME()) > 0)
-                        && (account1.getOWNEREMAIL().compareTo(account2.getOWNEREMAIL()) > 0)) {
-                    return 1;
-                }
-            }
+        if (!b1Pass.equals(b2Pass)) {
+            return b1Pass.compareTo(b2Pass);
         }
+
+        if (!b1Name.equals(b2Name)) {
+            return b1Name.compareTo(b2Name);
+        }
+
         return 0;
     }
 }

@@ -1,71 +1,56 @@
 package Accounts.CreditAccountModule;
-
 import Accounts.Account;
 import Accounts.IllegalAccountType;
-import Accounts.SavingsAccountModule.SavingsAccount;
 import Bank.Bank;
-
-
-/**
- * Represents a credit account that allows for payments and recompenses.
- */
-public class CreditAccount extends Account implements Recompense, Payment {
-
+import Accounts.SavingsAccountModule.SavingsAccount;
+public class CreditAccount extends Account implements Payment, Recompense {
     private double loan;
 
-    /**
-     * Constructs a CreditAccount with the specified details.
-     *
-     * @param bank         The bank associated with this account.
-     * @param ACCOUNTNUMBER The account number.
-     * @param OWNERFNAME   The first name of the account owner.
-     * @param OWNERLNAME   The last name of the account owner.
-     * @param OWNEREMAIL   The email of the account owner.
-     * @param pin          The PIN for the account.
-     */
-    public CreditAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+    public double getLoan() {
+        return loan;
+    }
 
+    public void setLoan(double loan) {
+        this.loan = loan;
+    }
+
+    public CreditAccount(Bank bank,  String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double loan) {
         super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
-        this.loan = 0.0;
+        this.loan = loan;
     }
 
-    /**
-     * Retrieves the loan statement for the account.
-     *
-     * @return A string representation of the loan statement.
-     */
     public String getLoanStatement() {
-
-        String format = String.format("%.2f", this.loan);
-
-        return  "Account Loan Statement:\n" +
-                "Account Number: " + getACCOUNTNUMBER() + "\n" +
+        String loan_statement = "Loan Statement:\n" +
                 "Owner: " + getOwnerFullName() + "\n" +
-                "Email: " + getOWNEREMAIL() + "\n" +
-                "Loan: " + format + "\n";
+                "Account Number: " + getAccountNumber() + "\n" +
+                "Loan Amount: " + loan + "\n";
+        return loan_statement;
     }
 
     /**
-     * Checks if the credit limit allows for the specified amount adjustment.
+     * Checks if this credit account can perform a credit transaction without exceeding the credit limit.
      *
-     * @param amountAdjustment The amount to adjust the loan by.
-     * @return True if the adjustment is within the credit limit, false otherwise.
+     * @param amountAdjustment The amount to adjust for the transaction.
+     * @return True if the credit transaction can proceed without exceeding the credit limit, false otherwise.
+     *
+     * This method calculates the new loan amount after adjusting it by the provided amount for the transaction.
+     * It retrieves the credit limit set by the associated bank and compares the new loan amount with the credit limit.
+     * If the new loan amount is less than or equal to the credit limit, it returns true indicating that the credit transaction
+     * can proceed without exceeding the credit limit. Otherwise, it returns false.
      */
     private boolean canCredit(double amountAdjustment) {
-
         double newLoan = this.loan + amountAdjustment;
-        double creditLimit = this.getBank().getCreditLimit();
+        double creditLimit = this.getBank().getCREDITLIMIT();
 
         return newLoan <= creditLimit;
     }
 
     /**
-     * Adjusts the loan amount by the specified adjustment.
+     * Adjusts the loan amount by the specified amount if it doesn't exceed the credit limit.
      *
-     * @param amountAdjustment The amount to adjust the loan by.
+     * @param  amountAdjustment    the amount to adjust the loan by
      */
     private void adjustLoanAmount(double amountAdjustment) {
-
         if (!canCredit(amountAdjustment)) {
             System.out.println("Cannot process: Exceeds credit limit");
             return;
@@ -75,16 +60,51 @@ public class CreditAccount extends Account implements Recompense, Payment {
     }
 
     /**
-     * Pays a specified amount to another account.
+     * Returns a string representation of the CreditAccount object, including its account number, owner's full name,
+     * and the loan amount.
      *
-     * @param account The account to pay to.
-     * @param amount  The amount to pay.
-     * @return True if the payment was successful, false otherwise.
-     * @throws IllegalAccountType If the account type is illegal for the payment.
+     * @return a formatted string representing the CreditAccount object
+     */
+    @Override
+    public String toString() {
+        String format = String.format("%.2f", loan);
+
+        String account_statement = "Account Balance Statement:\n" +
+                "Account Number: " + getAccountNumber() + "\n" +
+                "Owner: " + getOwnerFullName() + "\n" +
+                "Email: " + getOWNEREMAIL() + "\n" +
+                "Balance: " + format + "\n";
+
+        return account_statement;
+    }
+
+    /**
+     * A method to recompense a certain amount of money.
+     *
+     * @param  amount  the amount of money to be recompensed
+     * @return         true if the recompense is successful, false if not
+     */
+    @Override
+    public boolean recompense(double amount) {
+        if (amount <= 0 || amount > this.loan) {
+            return false;
+        }
+
+        adjustLoanAmount(-amount);
+        return true;
+    }
+
+
+    /**
+     * Pay the specified amount to the given account.
+     *
+     * @param  account   the account to pay from
+     * @param  amount    the amount to pay
+     * @return           true if the payment was successful, false otherwise
+     * @throws IllegalAccountType if the account is not a CreditAccount
      */
     @Override
     public boolean pay(Account account, double amount) throws IllegalAccountType {
-
         if (account instanceof CreditAccount) {
             throw new IllegalAccountType("Credit Accounts cannot pay to other Credit Accounts.");
         }
@@ -94,46 +114,13 @@ public class CreditAccount extends Account implements Recompense, Payment {
         }
 
         if (getBank() != account.getBank()) {
-            adjustLoanAmount(amount + getBank().getProcessingFee());
+            adjustLoanAmount(amount + getBank().getPROCESSINGFEE());
+            ((SavingsAccount) account).cashDeposit(amount);
+            return true;
         } else {
             adjustLoanAmount(amount);
+            ((SavingsAccount) account).cashDeposit(amount);
+            return true;
         }
-        ((SavingsAccount) account).cashDeposit(amount);
-        return true;
     }
-
-    /**
-     * Recompenses a specified amount to reduce the loan.
-     *
-     * @param amount The amount to recompense.
-     * @return True if the recompense was successful, false otherwise.
-     */
-    @Override
-    public boolean recompense(double amount) {
-
-        if (amount <= 0 || amount > this.loan) {
-            return false;
-        }
-
-        adjustLoanAmount(-amount);
-        return true;
-    }
-
-    /**
-     * Returns a string representation of the credit account details.
-     *
-     * @return A string containing the account number, owner's name, email, and loan amount.
-     */
-    @Override
-    public String toString() {
-
-        String creditAcc = "";
-        creditAcc += "Account Number: " + getACCOUNTNUMBER() + "\n";
-        creditAcc += "Name: " + getOWNERFNAME() + " " + getOWNERLNAME() + "\n";
-        creditAcc += "Email: " + getOWNEREMAIL() + "\n";
-        creditAcc += "Credit: " + this.loan + "\n";
-
-        return creditAcc;
-    }
-
 }

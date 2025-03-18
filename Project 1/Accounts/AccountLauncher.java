@@ -1,92 +1,93 @@
 package Accounts;
 
+import Bank.Bank;
+import Bank.BankLauncher;
 import Accounts.CreditAccountModule.CreditAccount;
 import Accounts.CreditAccountModule.CreditAccountLauncher;
 import Accounts.SavingsAccountModule.SavingsAccount;
 import Accounts.SavingsAccountModule.SavingsAccountLauncher;
-import Bank.Bank;
-import Bank.BankLauncher;
-import Main.Field;
 import Main.Main;
+import Main.Field;
 
-/**
- * Handles the login process for accounts and manages account-related operations.
- */
 public class AccountLauncher {
-    private static Account loggedAccount; // Currently logged-in account
-    private static Bank assocBank; // Associated bank for the logged account
+    private static Account loggedAccount;
+    private static Bank assocBank;
 
-    /**
-     * Gets the Associated bank for the logged account
-     *
-     * @return The Associated Bank with the account
-     */
     public static Bank getAssocBank() {
         return assocBank;
     }
 
+    public static void setAssocBank(Bank assocBank) {
+        AccountLauncher.assocBank = assocBank;
+    }
+
     /**
-     * Checks if an account is currently logged in.
+     * Checks if a user is currently logged in by verifying the presence of a logged account.
      *
-     * @return True if an account is logged in, false otherwise
+     * @return true if a user is logged in, false otherwise
      */
     private static boolean isLoggedIn() {
-
         return loggedAccount != null;
     }
 
     /**
-     * Manages the login process for the account.
+     * A function to handle account login.
+     * @throws IllegalAccountType
      *
-     * @throws IllegalAccountType if the account type is invalid
      */
     public static void accountLogin() throws IllegalAccountType {
-
+        Main.showMenuHeader("Account Login");
         if (isLoggedIn()) {
             destroyLogSession();
         }
 
         while (assocBank == null) {
-            System.out.println("Select a Bank first");
+            System.out.println("Select a bank first");
             assocBank = selectBank();
             if (assocBank == null) {
                 System.out.println("Invalid bank selection. Please try again.");
             }
         }
 
-        while (loggedAccount == null) {
+        String accountNum;
+        String pin;
+        do {
             Main.showMenuHeader("Account Login");
-            String accountNum = Main.prompt("Input account number: ", true);
-            String pin = Main.prompt("Input PIN: ", true);
-
+            accountNum = Main.prompt("Enter account number: ", true);
+            pin = Main.prompt("Enter PIN: ", true);
             loggedAccount = checkCredentials(accountNum, pin);
-            if (loggedAccount != null) {
-                System.out.println("Login successful.");
-                setLogSession(loggedAccount);
-                if (loggedAccount instanceof SavingsAccount) {
-                    SavingsAccountLauncher.savingsAccountInit();
-                } else if (loggedAccount instanceof CreditAccount) {
-                    CreditAccountLauncher.creditAccountInit();
-                }
-            } else {
-                System.out.println("Account doesn't exist!");
+            if (loggedAccount == null) {
+                System.out.println("Invalid account number or PIN. Please try again.");
+            }
+        } while (loggedAccount == null);
+
+        if (loggedAccount != null) {
+            System.out.println("Login successful.");
+            setLogSession(loggedAccount);
+            if (loggedAccount.getClass() == SavingsAccount.class) {
+                SavingsAccountLauncher.savingsAccountInit();
+            }
+            else if (loggedAccount.getClass() == CreditAccount.class) {
+                CreditAccountLauncher.creditAccountInit();
             }
         }
     }
 
     /**
-     * Prompts the user to select a bank from the list of registered banks.
+     * Bank selection screen before the user is prompted to login. User is prompted for the Bank ID
+     * with corresponding bank name.
      *
-     * @return The selected bank, or null if no valid selection is made
+     * @return Bank object based on selected ID
      */
     private static Bank selectBank() {
-
         Main.showMenuHeader("Bank Selection");
         BankLauncher.showBanksMenu();
         Field<Integer, Integer> bankID = new Field<Integer,Integer>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
         Field<String, String> bankName = new Field<String,String>("Name", String.class, "", new Field.StringFieldValidator());
-        bankID.setFieldValue("Input Bank ID: ");
-        bankName.setFieldValue("Input Bank Name: ");
+        Field<String, String> bankPass = new Field<String,String>("Passcode", String.class, "", new Field.StringFieldValidator());
+        bankID.setFieldValue("Enter bank id: ");
+        bankName.setFieldValue("Enter bank name: ");
+        bankPass.setFieldValue("Enter bank passcode: ");
 
         for (Bank bank : BankLauncher.getBANKS()) {
             if (bank.getID() == bankID.getFieldValue() && bank.getName().equals(bankName.getFieldValue())) {
@@ -94,61 +95,64 @@ public class AccountLauncher {
                 return bank;
             }
         }
-
-        System.out.println("Bank does not exist.");
         return null;
     }
 
     /**
-     * Sets the current logged-in account session.
+     * Sets the log session for the given account.
      *
-     * @param account The account that is logging in
+     * @param  account   the account for which the log session is being set
      */
     private static void setLogSession(Account account) {
-
-        loggedAccount = account;
-        System.out.println("Session is set for account: " + account.getOwnerFullName());
+        System.out.println("Session created for account number  " + loggedAccount.getAccountNumber());
     }
 
     /**
-     * Logs out the currently logged-in account.
+     * Destroys the current log session if a user is logged in, resetting the loggedAccount to null.
+     * Prints relevant messages indicating the success or absence of a log session.
      */
     private static void destroyLogSession() {
+        // Check if a user is logged in
+        if (isLoggedIn()) {
+            // Log the destruction of the log session for the currently logged account
+            System.out.println("Destroying log session for account: " + loggedAccount.getAccountNumber());
+            // Reset the loggedAccount to null
+            loggedAccount = null;
+            assocBank = null;
+            // Print a message indicating the successful destruction of the log session
+            System.out.println("Log session destroyed.");
+        }
 
-        loggedAccount = null;
-        assocBank = null;
+        else {
+            // Print a message indicating that no user is logged in, and log session destruction is not required
+            System.out.println("No user logged in. Log session destruction not required.");
+        }
     }
 
     /**
-     * Checks the provided credentials against the associated bank's accounts.
+     * Checks inputted credentials during account login.
      *
-     * @param accountNum The account number to check
-     * @param pin The PIN to verify
-     * @return The account if credentials are valid, null otherwise
+     * @param accountNum – Account number.
+     * @param pin – 4-digit pin.
+     *
+     * @return Account object if it passes verification. Null if not.
      */
     public static Account checkCredentials(String accountNum, String pin) {
-
         Account selAccount = assocBank.getBankAccount(assocBank, accountNum);
-        if (selAccount != null && selAccount.getACCOUNTNUMBER().equals(accountNum) && selAccount.getPin().equals(pin)) {
+        if (selAccount != null && selAccount.getAccountNumber().equals(accountNum) && selAccount.getPin().equals(pin)) {
             return selAccount;
         } else {
-            System.out.println("Invalid account number or PIN.");
+            System.out.println("Invalid account number or PIN for account " + accountNum + ".");
             return null;
         }
     }
 
     /**
-     * Retrieves the currently logged-in account.
+     * Retrieves the currently logged in account.
      *
-     * @return The logged-in account, or null if no account is logged in
+     * @return the logged in account
      */
     protected static Account getLoggedAccount() {
-
-        if (isLoggedIn()) {
-            return loggedAccount;
-        } else {
-            System.out.println("There is no logged account.");
-            return null;
-        }
+        return loggedAccount;
     }
 }

@@ -8,28 +8,26 @@ import Bank.Bank;
 import Bank.BankLauncher;
 import Main.Main;
 
-import java.util.Objects;
-
-/**
- * Manages the savings account operations and user interactions.
- */
 public class SavingsAccountLauncher extends AccountLauncher {
 
-    /**
-     * Initializes the savings account menu and handles user interactions.
-     */
-    public static void savingsAccountInit() {
 
+    /**
+     * Initializes the savings account functionality for the currently logged-in user.
+     * Prints the account balance statement if a savings account is logged in.
+     * Otherwise, prints a message indicating that no account is logged in.
+     * @throws IllegalAccountType
+     */
+    public static void savingsAccountInit() throws IllegalAccountType {
         while (true) {
             try {
                 Main.showMenuHeader("Savings Account Menu");
                 Main.showMenu(51);
                 Main.setOption();
-
-                switch (Main.getOption()) {
+                int choice = Main.getOption();
+                switch (choice) {
                     case 1:
                         Main.showMenuHeader("Balance Statement");
-                        System.out.println(Objects.requireNonNull(getLoggedAccount()).getAccountBalanceStatement());
+                        System.out.println(getLoggedAccount().getAccountBalanceStatement());
                         continue;
                     case 2:
                         depositProcess();
@@ -41,12 +39,12 @@ public class SavingsAccountLauncher extends AccountLauncher {
                         fundTransferProcess();
                         continue;
                     case 5:
-                        System.out.println(Objects.requireNonNull(getLoggedAccount()).getTransactionsInfo());
+                        System.out.println(getLoggedAccount().getTransactionsInfo());
                         continue;
                     case 6:
                         return;
                     default:
-                        System.out.println("Invalid Option");
+                        System.out.println("Invalid option");
                 }
             } catch (IllegalAccountType err) {
                 System.out.println(err.getMessage());
@@ -54,22 +52,23 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+
     /**
-     * Processes deposits for the logged-in savings account.
+     * A description of the entire Java function.
+     *
      */
     private static void depositProcess() {
+        SavingsAccount loggedAccount = getLoggedAccount();
 
-        SavingsAccount savingsAccount = getLoggedAccount();
-
-        if (savingsAccount == null) {
-            System.out.println("No Account found!");
+        if (loggedAccount == null) {
+            System.out.println("No account found!");
             return;
         }
 
         double depositAmount;
 
         while (true) {
-            String depositAmount_str = Main.prompt("Input Deposit amount: ", true);
+            String depositAmount_str = Main.prompt("Enter deposit amount: ", true);
 
             try {
                 depositAmount = Double.parseDouble(depositAmount_str);
@@ -79,41 +78,45 @@ public class SavingsAccountLauncher extends AccountLauncher {
                     break;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please Input a valid amount!");
+                System.out.println("Please enter a valid amount!");
             }
         }
 
-        boolean depositSuccess = savingsAccount.cashDeposit(depositAmount);
+        boolean depositSuccess = loggedAccount.cashDeposit(depositAmount);
         if (depositSuccess) {
             System.out.println("Deposit successful!");
-            System.out.println("Balance: " + savingsAccount.getBalance());
-            getLoggedAccount().addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.Deposit, "A Successful deposit.");
+            System.out.println("Balance: " + loggedAccount.getBalance());
+            getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.Deposit, "A successful deposit.");
         } else {
             System.out.println("Deposit failed. Please try again.");
         }
     }
 
+
     /**
-     * Processes withdrawals for the logged-in savings account.
+     * Initiates the withdrawal process for the logged-in savings account.
+     * Prompts the user to enter the withdrawal amount and performs the withdrawal if the amount is valid and sufficient.
+     * Prints appropriate messages indicating the success or failure of the withdrawal process.
      */
     private static void withdrawProcess() {
 
         SavingsAccount loggedAccount = getLoggedAccount();
+        // Check if a savings account is logged in
         if (loggedAccount != null) {
             loggedAccount.toString();
-            String withdrawAmount = Main.prompt("Input the amount to withdraw: ", true);
+            String withdrawAmount = Main.prompt("Enter the amount to withdraw: ", true);
             double amount = Double.parseDouble(withdrawAmount);
 
             if (amount <= 0) {
-                System.out.println("Invalid amount. Please Input a positive value.");
+                // Check if the withdrawal amount is valid
+                System.out.println("Invalid amount. Please enter a positive value.");
                 return;
             }
 
             if (loggedAccount.getBalance() >= amount) {
                 if (loggedAccount.withdrawal(amount)) {
-                    System.out.println("Withdrawal successful");
                     System.out.println("Balance: " + loggedAccount.getBalance());
-                    getLoggedAccount().addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.Withdraw, "A Successful withdraw.");
+                    getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.Withdraw, "A successful withdrawal.");
                 } else {
                     System.out.println("Withdrawal failed");
                 }
@@ -125,10 +128,15 @@ public class SavingsAccountLauncher extends AccountLauncher {
         }
     }
 
+    /**
+     * A method that deals with the fund transfer process transaction.
+     *
+     * @throws IllegalAccountType
+     */
     private static void fundTransferProcess() throws IllegalAccountType {
         SavingsAccount loggedAccount = getLoggedAccount();
 
-        System.out.println("[1]. Internal transfer \n[2]. External transfer");
+        System.out.println("[1] Internal transfer \n[2] External transfer");
         Main.setOption();
 
         switch (Main.getOption()) {
@@ -136,10 +144,9 @@ public class SavingsAccountLauncher extends AccountLauncher {
                 String internalAccNum = Main.prompt("Account Number: ", true);
                 double internalAmount = Double.parseDouble(Main.prompt("Amount: ", true));
 
-                assert loggedAccount != null;
                 SavingsAccount internalAccount = (SavingsAccount) loggedAccount.getBank().getBankAccount(loggedAccount.getBank(), internalAccNum);
                 if (loggedAccount.transfer(internalAccount, internalAmount)) {
-                    Objects.requireNonNull(getLoggedAccount()).addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.FundTransfer, "A successful fund transfer.");
+                    getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.FundTransfer, "A successful fund transfer.");
                 } else {
                     System.out.println("Transfer unsuccessful!");
                 }
@@ -153,32 +160,32 @@ public class SavingsAccountLauncher extends AccountLauncher {
                 for (Bank bank : BankLauncher.getBANKS()) {
                     if (bank.getID() == externalBankID) {
                         Account externalAccount = bank.getBankAccount(bank, externalAccNum);
-                        assert loggedAccount != null;
                         if (loggedAccount.transfer(bank, externalAccount, externalAmount)) {
-                            Objects.requireNonNull(getLoggedAccount()).addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.FundTransfer, "A successful fund transfer.");
+                            System.out.println("Balance: " + loggedAccount.getBalance());
+                            getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.FundTransfer, "A successful fund transfer.");
                         } else {
-                            System.out.println("Transfer Unsuccessful!");
+                            System.out.println("Transfer unsuccessful!");
                         }
+
                     }
                 }
                 break;
             default:
-                System.out.println("Invalid Option!");
+                break;
         }
     }
 
     /**
-     * Retrieves the logged-in savings account.
+     * Method to get the currently logged Savings Account
      *
-     * @return The logged-in SavingsAccount, or null if no valid account is found.
+     * @return Savings Account instance of the currently logged account.
      */
     protected static SavingsAccount getLoggedAccount() {
-
         Account account = AccountLauncher.getLoggedAccount();
         if (account instanceof SavingsAccount) {
             return (SavingsAccount) account;
         } else {
-            System.out.println("No Logged-in savings account found.");
+            System.out.println("No logged-in savings account found.");
             return null;
         }
     }

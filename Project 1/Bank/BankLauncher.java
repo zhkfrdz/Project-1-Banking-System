@@ -1,70 +1,68 @@
 package Bank;
 
+import java.util.ArrayList;
 import Accounts.Account;
 import Accounts.CreditAccountModule.CreditAccount;
 import Accounts.SavingsAccountModule.SavingsAccount;
-import Main.Field;
+import Main.Menu;
 import Main.Main;
-import java.util.ArrayList;
+import Main.Field;
 
-/**
- * Manages the operations related to banks, including login and account management.
- */
+
 public class BankLauncher {
-    private final static ArrayList<Bank> BANKS = new ArrayList<>(); // List of registered banks
-    private static Bank loggedBank = null; // Currently logged-in bank
+    private static ArrayList<Bank> BANKS = new ArrayList<>();
+    private static Bank loggedBank = null;
 
     /**
-     * Gets the list of registered banks.
+     * Checks if the user is logged in by verifying if the loggedBank object is not null.
      *
-     * @return List of banks
-     */
-    public static ArrayList<Bank> getBANKS() {
-        return BANKS;
-    }
-
-    /**
-     * Gets the currently logged-in bank.
-     *
-     * @return The logged-in bank
-     */
-    public static Bank getLoggedBank() {
-        return loggedBank;
-    }
-
-    /**
-     * Checks if a bank is currently logged in.
-     *
-     * @return True if a bank is logged in, false otherwise
+     * @return  true if the user is logged in, false otherwise
      */
     public static boolean isLogged() {
         return loggedBank != null;
     }
 
     /**
-     * Initializes the bank menu for user interactions.
+     * This function initializes the bank system, logs in the user, and displays a menu for bank operations.
      */
     public static void bankInit() {
-        while (true) {
-            Main.showMenuHeader("Bank Menu");
-            Main.showMenu(31);
-            Main.setOption();
+        bankLogin();
+        if (isLogged()) {
+            boolean menuContinue = true;
 
-            if (Main.getOption() == 1) {
-                showAccounts();
-            } else if (Main.getOption() == 2) {
-                newAccounts();
-            } else if (Main.getOption() == 3) {
-                logout();
-                break;
-            } else {
-                System.out.println("Invalid option");
+            while (menuContinue) {
+                Main.showMenuHeader("Bank Menu");
+                Main.showMenu(Menu.BankMenu.menuIdx);
+
+                try {
+                    Main.setOption();
+                    int choice = Main.getOption();
+
+                    switch (choice) {
+                        case 1:
+                            showAccounts();
+                            break;
+                        case 2:
+                            newAccounts();
+                            break;
+                        case 3:
+                            logout();
+                            menuContinue = false;
+                            break;
+                        default:
+                            System.out.println("Invalid option! Please try again.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input!");
+                }
             }
+        } else {
+            System.out.println("Please login to your bank account.");
         }
     }
 
     /**
-     * Displays the accounts associated with the logged-in bank.
+     * Show accounts based on user input.
      */
     public static void showAccounts() {
         while (true) {
@@ -94,40 +92,41 @@ public class BankLauncher {
     }
 
     /**
-     * Handles the login process for the bank.
+     * Performs the bank login process by prompting the user for the bank name and PIN.
+     * It checks if the provided bank name and PIN match any of the registered banks.
+     * If a match is found, it sets the logged bank session.
+     * If no match is found, it displays an error message.
      */
     public static void bankLogin() {
-        int ID = Integer.parseInt(Main.prompt("Enter Bank ID: ", true));
-        String name = Main.prompt("Enter Bank Name: ", true);
-        String passcode = Main.prompt("Enter PIN: ", true);
+        Main.showMenuHeader("Bank Login");
+        String bankName = Main.prompt("Enter bank name: ", true);
+        String pin = Main.prompt("Enter PIN: ", true);
 
-        BankComparator comparator = new BankComparator(); // Assuming a comparator is available
-
-        Bank bank = getBank(comparator, new Bank(ID, name, passcode)); // Use getBank to retrieve the bank
-
-        if (bank != null) {
-            setLogSession(bank);
-            bankInit();
-            return;
+        for (Bank bank : BANKS) {
+            if (bank.getName().equals(bankName) && bank.getPasscode().equals(pin)) {
+                setLogSession(bank);
+                break;
+            }
         }
-
-        System.out.println("Invalid id or passcode. Please try again.");
+        if (loggedBank == null) {
+            System.out.println("Invalid bank name or PIN. Please try again.");
+        }
     }
 
     /**
-     * Manages the creation of new accounts for the logged-in bank.
+     * Prompts the user to create a new account and adds it to the logged-in bank.
+     * Displays a menu for selecting the type of account (credit or savings) to create.
      */
     private static void newAccounts() {
         Main.showMenuHeader("New Account Type");
         Main.showMenu(33);
         Main.setOption();
-
         switch (Main.getOption()) {
-            case 1:
+            case 1: // Creates and adds a new Credit Account to the logged-in bank.
                 CreditAccount newCreditAcc = getLoggedBank().createNewCreditAccount();
                 getLoggedBank().addNewAccount(newCreditAcc);
                 break;
-            case 2:
+            case 2: // Creates and adds a new Savings Account to the logged-in bank.
                 SavingsAccount newSavingAcc = getLoggedBank().createNewSavingsAccount();
                 getLoggedBank().addNewAccount(newSavingAcc);
                 break;
@@ -138,32 +137,40 @@ public class BankLauncher {
     }
 
     /**
-     * Sets the current logged-in bank session.
+     * Sets up a new login session for the logged-in bank user.
+     * If another bank account is already logged in, prints a message and returns.
+     * Otherwise, sets the provided bank as the logged-in bank and prints a success message.
      *
-     * @param b The bank that is logging in
+     * @param b The bank user that successfully logged in.
      */
     private static void setLogSession(Bank b) {
+        // Checks if another bank account is already logged in
         if (isLogged()) {
-            System.out.println("Another Bank Account is currently logged in");
+            System.out.println("Another bank account is currently logged in");
             return;
         }
-
-        loggedBank = b;
+        // Sets the provided bank as the logged-in bank
+        setLoggedBank(b);
+        System.out.println("Bank account logged in successfully");
     }
 
-    /**
-     * Logs out the currently logged-in bank.
-     */
+    // Janos and Mia here
     private static void logout() {
         loggedBank = null;
+        System.out.println("Logout successful. Session destroyed.");
     }
 
     /**
-     * Creates a new bank based on user input.
+     * Allows the creation of a new bank by prompting the user to enter the bank name.
+     * If the provided name is empty, it displays an error message and prompts the user again.
      *
-     * @throws NumberFormatException if the input format is invalid
+     * This method displays a menu header for creating a new bank and prompts the user to enter the bank name.
+     * It ensures that the provided name is not empty before proceeding.
+     *
+     * If the user enters an empty name, it displays an error message and prompts the user again until a valid name is provided.
      */
-    public static void createNewBank() throws NumberFormatException {
+    public static void createNewBank() {
+        Main.showMenuHeader("Create New Bank");
         Field<Integer,Integer> idField = new Field<>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
         Field<String,String> nameField = new Field<>("Name", String.class, "", new Field.StringFieldValidator());
         Field<String,Integer> passcodeField = new Field<>("Passcode", String.class, 5, new Field.StringFieldLengthValidator());
@@ -172,95 +179,137 @@ public class BankLauncher {
         Field<Double,Double> creditLimitField = new Field<>("Credit Limit", Double.class, 0.0, new Field.DoubleFieldValidator());
         Field<Double,Double> processingFeeField = new Field<>("Processing Fee", Double.class, 0.0, new Field.DoubleFieldValidator());
 
-        Bank newBank;
-
         try {
             idField.setFieldValue("Bank ID: ");
             nameField.setFieldValue("Bank Name: ");
             passcodeField.setFieldValue("Bank Passcode: ");
-            depositLimitField.setFieldValue("Deposit Limit(0 for default): ");
-            if (depositLimitField.getFieldValue() == 0) {
-                int id = idField.getFieldValue();
-                String name = nameField.getFieldValue();
-                String passcode = passcodeField.getFieldValue();
-
-                newBank = new Bank(id, name, passcode);
-            } else {
-                withdrawLimitField.setFieldValue("Withdraw Limit: ");
-                creditLimitField.setFieldValue("Credit Limit: ");
-                processingFeeField.setFieldValue("Processing Fee: ");
-
-                int id = idField.getFieldValue();
-                String name = nameField.getFieldValue();
-                String passcode = passcodeField.getFieldValue();
-                double depositLimit = depositLimitField.getFieldValue();
-                double withdrawLimit = withdrawLimitField.getFieldValue();
-                double creditLimit = creditLimitField.getFieldValue();
-                double processingFee = processingFeeField.getFieldValue();
-
-                newBank = new Bank(id, name, passcode, depositLimit, withdrawLimit, creditLimit, processingFee);
-            }
+            depositLimitField.setFieldValue("Deposit Limit (0 for default): ");
+            withdrawLimitField.setFieldValue("Withdraw Limit (0 for default): ");
+            creditLimitField.setFieldValue("Credit Limit (0 for default): ");
+            processingFeeField.setFieldValue("Processing Fee (0 for default): ");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input format! Please enter a valid number.");
             return;
         }
 
+        int id = idField.getFieldValue();
+        String name = nameField.getFieldValue();
+        String passcode = passcodeField.getFieldValue();
+        double depositLimit = depositLimitField.getFieldValue();
+        double withdrawLimit = withdrawLimitField.getFieldValue();
+        double creditLimit = creditLimitField.getFieldValue();
+        double processingFee = processingFeeField.getFieldValue();
+
+        Bank newBank;
+        if (depositLimit == 0.0 && withdrawLimit == 0.0 && creditLimit == 0.0 && processingFee == 0.0) {
+            newBank = new Bank(id, name, passcode);
+        } else {
+            newBank = new Bank(id, name, passcode, depositLimit, withdrawLimit, creditLimit, processingFee);
+        }
+
+        System.out.println("Bank created successfully.");
         addBank(newBank);
     }
 
     /**
-     * Displays the menu of registered banks.
+     * Displays the menu of registered banks, showing each bank's name, ID, and position in the list.
      */
     public static void showBanksMenu() {
-        for (Bank bank : BANKS) {
-            System.out.println(bank.toString());
+        if (BANKS == null || BANKS.isEmpty()) {
+            System.out.println("No banks registered or created.");
+            return;
+        }
+
+        System.out.println("Registered Banks:");
+        System.out.println("-------------------------------------");
+
+        for (int i = 0; i < BANKS.size(); i++) {
+            Bank bank = BANKS.get(i);
+            System.out.println((i + 1) + ". " + bank.getName());
+            System.out.println("   ID: " + bank.getID());
+            System.out.println("-------------------------------------");
         }
     }
 
+    /**
+     * Add a bank to the list of banks.
+     *
+     * @param  b    the bank to be added
+     * @return      void
+     */
     private static void addBank(Bank b) {
         BANKS.add(b);
     }
 
-    /**
-     * Retrieves a bank from the list of registered banks based on a comparator.
-     *
-     * @param comparator The comparator to use for comparison
-     * @param bank The bank to find
-     * @return The found bank, or null if not found
-     */
-    public static Bank getBank(BankComparator comparator, Bank bank) {
-        if (getBANKS() == null || bankSize() == 0) {
-            return null;
-        }
-        for (Bank b : getBANKS()) {
-            if (comparator.compare(b, bank) == 0) {
-                return b;
+    // Janos and Mia here
+    public static Bank getBank(Comparator<Bank> comparator, Bank bank) {
+        for (Bank registeredBank : BANKS) {
+            if (comparator.compare(registeredBank, bank) == 0) {
+                return registeredBank;
             }
         }
         return null;
     }
 
     /**
-     * Finds an account by its account number across all registered banks.
+     * Finds the Account object based on the provided account number across all registered banks.
      *
-     * @param accountNum The account number to search for
-     * @return The found Account object, or null if not found
+     * @param accountNum The account number of the target Account.
+     * @return The Account object if it exists, or null if not found.
+     *
+     * This method iterates through all registered banks and checks if the provided account number exists in each bank.
+     * If the account number exists in any bank, it retrieves the corresponding Account object using the bank's method
+     * `getBankAccount()`. It returns the found Account object. If the account number is not found in any bank, it returns null.
      */
     public static Account findAccount(String accountNum) {
         for (Bank bank : getBANKS()) {
-            if (Bank.accountExist(bank, accountNum)){
+            if (Bank.accountExists(bank, accountNum) == true){
                 return bank.getBankAccount(bank, accountNum);
             }
         }
+        // If the account number is not found in any bank, return null
         return null;
     }
 
     /**
-     * Gets the number of registered banks.
+     * Retrieves the size of the bank.
      *
-     * @return The size of the bank list
+     * @return         	the size of the bank
      */
     public static int bankSize() {
-        return getBANKS().size();
+        return BANKS.size();
+    }
+
+    /**
+     * A description of the entire Java function.
+     *
+     * @return         description of return value
+     */
+    public static ArrayList<Bank> getBANKS() {
+        if (BANKS == null) {
+            BANKS = new ArrayList<>();
+            return BANKS;
+        } else if (BANKS.isEmpty()) {
+            return BANKS;
+        }
+        return BANKS;
+    }
+
+    /**
+     * Retrieves the currently logged-in bank instance.
+     *
+     * @return The logged-in bank instance.
+     */
+    public static Bank getLoggedBank() {
+        return loggedBank;
+    }
+
+    /**
+     * Sets the logged bank.
+     *
+     * @param  loggedBank the bank to be set as logged
+     */
+    public static void setLoggedBank(Bank loggedBank) {
+        BankLauncher.loggedBank = loggedBank;
     }
 }

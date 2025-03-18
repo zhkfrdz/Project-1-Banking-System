@@ -6,28 +6,23 @@ import Accounts.IllegalAccountType;
 import Accounts.Transaction.Transactions;
 import Main.Main;
 
-import java.util.Objects;
-
-/**
- * Manages the credit account operations and user interactions.
- */
 public class CreditAccountLauncher extends AccountLauncher {
-
     /**
-     * Initializes the credit account menu and handles user interactions.
+     * Initializes the credit account and handles the account menu options.
+     *
+     * @throws IllegalAccountType if the account type is invalid
      */
-    public static void creditAccountInit() {
-
+    public static void creditAccountInit() throws IllegalAccountType {
         while (true) {
             try {
                 Main.showMenuHeader("Credit Account Menu");
                 Main.showMenu(41);
                 Main.setOption();
-
-                switch (Main.getOption()) {
+                int opti = Main.getOption();
+                switch (opti) {
                     case 1:
                         Main.showMenuHeader("Loan Statement");
-                        System.out.println(Objects.requireNonNull(getLoggedAccount()).getLoanStatement());
+                        System.out.println(getLoggedAccount().getLoanStatement());
                         continue;
                     case 2:
                         creditPaymentProcess();
@@ -36,7 +31,7 @@ public class CreditAccountLauncher extends AccountLauncher {
                         creditRecompenseProcess();
                         continue;
                     case 4:
-                        System.out.println(Objects.requireNonNull(getLoggedAccount()).getTransactionsInfo());
+                        System.out.println(getLoggedAccount().getTransactionsInfo());
                         continue;
                     case 5:
                         return;
@@ -50,49 +45,76 @@ public class CreditAccountLauncher extends AccountLauncher {
     }
 
     /**
-     * Processes credit payments for the logged-in account.
+     * Processes a credit payment.
      *
-     * @throws IllegalAccountType If the account type is illegal for the payment.
+     * @throws IllegalAccountType if the account type is illegal
      */
     private static void creditPaymentProcess() throws IllegalAccountType {
-
+        CreditAccount loggedAccount = getLoggedAccount();
         String accNum = Main.prompt("Account number: ", true);
         double amount = Double.parseDouble(Main.prompt("Amount: ", true));
 
         Account account = getAssocBank().getBankAccount(getAssocBank(), accNum);
-        if (Objects.requireNonNull(getLoggedAccount()).pay(account, amount)) {
-            getLoggedAccount().addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.Payment, "A uccessful payment.");
+        if (getLoggedAccount().pay(account, amount)) {
+            System.out.println("Credit: " + loggedAccount.getLoan());
+            getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.Payment, "A successful payment.");
         } else {
-            System.out.println("Payment Unsuccessful!");
+            System.out.println("Payment unsuccessful!");
         }
     }
 
     /**
-     * Processes recompense for the logged-in account.
+     * Process for recompensing credit to a logged account.
      */
     private static void creditRecompenseProcess() {
+        CreditAccount loggedAccount = getLoggedAccount();
+        if (loggedAccount == null) {
+            System.out.println("No credit account logged in.");
+            return;
+        }
 
-        double amount = Double.parseDouble(Main.prompt("Amount: ", true));
+        double amountToRecompense;
+        while (true) {
+            String amount = Main.prompt("Enter the amount to recompense: ", true);
+            try {
+                amountToRecompense = Double.parseDouble(amount);
+                if (amountToRecompense <= 0) {
+                    System.out.println("Amount must be greater than zero!");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid amount!");
+            }
+        }
 
-        if (Objects.requireNonNull(getLoggedAccount()).recompense(amount)) {
-            getLoggedAccount().addNewTransaction(getLoggedAccount().getACCOUNTNUMBER(), Transactions.Recompense, "A Successful recompense.");
+        boolean success = loggedAccount.recompense(amountToRecompense);
+        if (success) {
+            System.out.println("Recompense successful!");
+            getLoggedAccount().addNewTransaction(getLoggedAccount().getAccountNumber(), Transactions.Recompense, "A successful recompense.");
         } else {
-            System.out.println("Recompense Unsuccessful!");
+            System.out.println("Recompense failed! The entered amount exceeds the credit limit!");
         }
     }
 
+
     /**
-     * Retrieves the logged-in credit account.
+     * Retrieves the currently logged-in CreditAccount, if available.
+     * This method delegates to AccountLauncher.getLoggedAccount() to obtain the logged account,
+     * and returns it if it is an instance of CreditAccount.
      *
-     * @return The logged-in CreditAccount, or null if no valid account is found.
+     * @return the currently logged-in CreditAccount, or null if not available or not a CreditAccount
      */
     protected static CreditAccount getLoggedAccount() {
-
+        // Attempt to obtain the logged account
         Account account = AccountLauncher.getLoggedAccount();
-        if (account instanceof CreditAccount) {
+
+        // Check if the obtained account is not null and is an instance of CreditAccount
+        if (account != null && account instanceof CreditAccount) {
+            // If so, return the logged CreditAccount
             return (CreditAccount) account;
         } else {
-            System.out.println("No logged-in credit account found.");
+            // Otherwise, return null
             return null;
         }
     }

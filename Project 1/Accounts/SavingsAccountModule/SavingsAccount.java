@@ -1,156 +1,119 @@
 package Accounts.SavingsAccountModule;
 
-import Bank.Bank;
 import Accounts.Account;
 import Accounts.IllegalAccountType;
+import Bank.Bank;
 
-/**
- * Represents a savings account that allows for deposits, withdrawals, and fund transfers.
- */
 public class SavingsAccount extends Account implements Withdrawal, Deposit, FundTransfer {
-
     private double balance;
 
-    /**
-     * Constructs a SavingsAccount with the specified details.
-     *
-     * @param bank         The bank associated with this account.
-     * @param ACCOUNTNUMBER The account number.
-     * @param OWNERFNAME   The first name of the account owner.
-     * @param OWNERLNAME   The last name of the account owner.
-     * @param OWNEREMAIL   The email of the account owner.
-     * @param pin          The PIN for the account.
-     * @param balance      The initial balance of the account.
-     */
-    public SavingsAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
+    public double getBalance() {
+        return balance;
+    }
 
-        super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    /**
-     * Retrieves the current balance of the account.
-     *
-     * @return The current balance.
-     */
-    public double getBalance() {
-
-        return this.balance;
+    public SavingsAccount(Bank bank,  String accountNumber, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
+        super(bank, accountNumber, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+        this.balance = balance;
     }
 
+
     /**
-     * Generates a statement of the account balance.
+     * Generates an account balance statement including account number, owner details, email, and balance.
      *
-     * @return A string representation of the account balance statement.
+     * @return          the formatted account balance statement
      */
     public String getAccountBalanceStatement() {
+        String format = String.format("%.2f", balance);
 
-
-        return "Account Balance Statement:\n" +
-                "Account Number: " + getACCOUNTNUMBER() + "\n" +
+        String account_statement = "Account Balance Statement:\n" +
+                "Account Number: " + getAccountNumber() + "\n" +
                 "Owner: " + getOwnerFullName() + "\n" +
                 "Email: " + getOWNEREMAIL() + "\n" +
-                "Balance: " + getBalance() + "\n";
+                "Balance: " + format + "\n";
+
+        return account_statement;
     }
 
     /**
-     * Checks if there is enough balance for a transaction.
+     * Checks if the account has sufficient balance to cover a specified amount.
      *
-     * @param amount The amount to check.
-     * @return True if there is enough balance, false otherwise.
+     * @param amount the amount to be checked against the account balance
+     * @return true if the account has enough balance, false otherwise
      */
     private boolean hasEnoughBalance(double amount) {
-
         double newBalance = this.balance + amount;
         return newBalance >= 0.0;
     }
 
-    /**
-     * Displays a message indicating insufficient balance for a transaction.
+
+    /*
+     * Warns the account owner that their balance is not enough for the transaction to proceed
+     * successfully.
      */
     private void insufficientBalance() {
-
         System.out.println("Insufficient balance for the transaction. Please check your account balance.");
-
     }
 
+    /*
+     * Adjusts the account balance of this savings account based on the amount to be adjusted.
+     * If the result of the adjustment brings the balance below 0.0, the balance is forcibly reset to 0.0.
+     *
+     * @param amount the amount to be added or subtracted from the account balance
+     */
     private void adjustAccountBalance(double amount) {
         if (!hasEnoughBalance(amount)) {
+            amount = 0.0;
             insufficientBalance();
             return;
         }
-
         this.balance += amount;
     }
 
+
     /**
-     * Withdraws a specified amount from the account.
+     * Returns a string representation of the object by delegating to the {@code getAccountBalanceStatement} method.
      *
-     * @param amount The amount to withdraw.
-     * @return True if the withdrawal was successful, false otherwise.
+     * @return a formatted string containing account balance information
      */
-    @Override
-    public boolean withdrawal(double amount) {
-
-        if (amount > getBank().getWithdrawLimit()) {
-            System.out.println("Withdrawal amount exceeds the withdraw limit.");
-            return false;
-        }
-
-        adjustAccountBalance(-amount);
-        return true;
+    public String toString() {
+        return getAccountBalanceStatement();
     }
 
     /**
-     * Deposits a specified amount into the account.
+     * A method to transfer money from one account to another within the same bank.
      *
-     * @param amount The amount to deposit.
-     * @return True if the deposit was successful, false otherwise.
-     */
-    @Override
-    public boolean cashDeposit(double amount) {
-
-        if (amount > getBank().getDepositLimit()) {
-            System.out.println("Deposit amount exceeds the deposit limit.");
-            return false;
-        }
-
-        adjustAccountBalance(amount);
-        return true;
-    }
-
-    /**
-     * Transfers a specified amount to another account.
-     *
-     * @param bank    The bank associated with the target account.
-     * @param account The target account to transfer to.
-     * @param amount  The amount to transfer.
-     * @return True if the transfer was successful, false otherwise.
-     * @throws IllegalAccountType If the account type is illegal for the transfer.
+     * @param  bank    the bank from which the transfer is taking place
+     * @param  account the account from which the transfer is being made
+     * @param  amount  the amount of money to be transferred
+     * @return         true if the transfer is successful, false otherwise
+     * @throws IllegalAccountType if the account type is invalid for the transfer
      */
     @Override
     public boolean transfer(Bank bank, Account account, double amount) throws IllegalAccountType {
-
         if (account instanceof SavingsAccount) {
-            withdrawal(amount + bank.getProcessingFee());
-            ((SavingsAccount) bank.getBankAccount(bank, account.getACCOUNTNUMBER())).cashDeposit(amount);
+            withdrawal(amount + bank.getPROCESSINGFEE());
+            ((SavingsAccount) bank.getBankAccount(bank, account.getAccountNumber())).cashDeposit(amount);
             return true;
         } else {
             throw new IllegalAccountType("Attempted transfer from illegal account type.");
         }
     }
 
+
     /**
-     * Transfers a specified amount to another savings account.
+     * A method to transfer an amount from one account to another.
      *
-     * @param account The target savings account to transfer to.
-     * @param amount  The amount to transfer.
-     * @return True if the transfer was successful, false otherwise.
-     * @throws IllegalAccountType If the account type is illegal for the transfer.
+     * @param  account  the account to transfer to
+     * @param  amount   the amount to transfer
+     * @return          true if the transfer is successful, false otherwise
+     * @throws IllegalAccountType if the account type is invalid
      */
     @Override
     public boolean transfer(Account account, double amount) throws IllegalAccountType {
-
         if (account instanceof SavingsAccount) {
             withdrawal(amount);
             ((SavingsAccount) account).cashDeposit(amount);
@@ -161,19 +124,36 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
     }
 
     /**
-     * Returns a string representation of the savings account details.
+     * Perform a cash deposit if there are enough funds in the account.
      *
-     * @return A string containing the account number, owner's name, email, and balance.
+     * @param  amount   the amount to deposit
+     * @return          true if the deposit was successful, false otherwise
      */
     @Override
-    public String toString() {
+    public boolean cashDeposit(double amount) {
+        if (amount > getBank().getDEPOSITLIMIT()) {
+            System.out.println("Deposit amount exceeds the deposit limit.");
+            return false;
+        }
+        adjustAccountBalance(amount);
+        return true;
+    }
 
-        String savingsAcc = "";
-        savingsAcc += "Account Number: " + getACCOUNTNUMBER() + "\n";
-        savingsAcc += "Name: " + getOWNERFNAME() + " " + getOWNERLNAME() + "\n";
-        savingsAcc += "Email: " + getOWNEREMAIL() + "\n";
-        savingsAcc += "Balance: " + this.balance + "\n";
 
-        return savingsAcc;
+    /**
+     * withdrawal function to deduct the specified amount from the balance
+     *
+     * @param  amount  the amount to be withdrawn
+     * @return         true if withdrawal is successful, false if there is insufficient balance
+     */
+    @Override
+    public boolean withdrawal(double amount) {
+        if (hasEnoughBalance(amount)) {
+            this.balance -= amount;
+            return true;
+        } else {
+            insufficientBalance();
+            return false;
+        }
     }
 }
