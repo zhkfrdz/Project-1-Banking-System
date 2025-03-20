@@ -81,7 +81,7 @@ public abstract class Account {
      */
     public ArrayList<Transaction> getTRANSACTIONS() {
 
-        return TRANSACTIONS;
+        return new ArrayList<> (TRANSACTIONS);
     }
 
     /**
