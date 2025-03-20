@@ -94,7 +94,9 @@ public abstract class Account {
      * @param pin the account PIN
      */
     public Account(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
-
+        if (bank == null || ACCOUNTNUMBER == null || OWNERFNAME == null || OWNERLNAME == null || OWNEREMAIL == null || pin == null) {
+            throw new IllegalArgumentException("none of the parameters can be null");
+        }
         this.bank = bank;
         this.ACCOUNTNUMBER = ACCOUNTNUMBER;
         this.OWNERFNAME = OWNERFNAME;
