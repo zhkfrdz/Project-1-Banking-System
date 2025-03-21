@@ -1,6 +1,8 @@
-import Accounts.CreditAccount;
+package Tests.Tests;
+
+import Accounts.CreditAccountModule.CreditAccount;
 import Accounts.IllegalAccountType;
-import Accounts.SavingsAccount;
+import Accounts.SavingsAccountModule.SavingsAccount;
 import Bank.Bank;
 import Bank.BankLauncher;
 import org.junit.Assert;
