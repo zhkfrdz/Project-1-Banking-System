@@ -309,7 +309,7 @@ public class Bank {
         String accountNum = fields.get(3).getFieldValue();
         String pin = fields.get(4).getFieldValue();
 
-        credit = new CreditAccount(bank, accountNum, firstName, lastName, email, pin, CREDITLIMIT);
+        credit = new CreditAccount(bank, accountNum, firstName, lastName, email, pin);
         System.out.println("Account created successfully!");
         return credit;
     }
