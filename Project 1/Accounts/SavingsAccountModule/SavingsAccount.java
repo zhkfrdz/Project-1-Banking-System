@@ -156,14 +156,20 @@ public class SavingsAccount extends Account implements Withdrawal, Deposit, Fund
     }
 
     /**
-     * Withdraws an amount from the account.
+     * Withdraws an amount from the account, enforcing a withdrawal limit.
+
      * @param amount the amount to withdraw
      * @return true if the withdrawal was successful, false otherwise
      */
     @Override
     public boolean withdrawal(double amount) {
 
-        if (hasEnoughBalance(amount)) {
+        if (amount > getBank().getWITHDRAWLIMIT()) {
+            System.out.println("Withdrawal amount exceeds the withdraw limit.");
+            return false;
+        }
+        if (hasEnoughBalance(amount) ) {
+
             this.balance -= amount;
             return true;
         } else {
