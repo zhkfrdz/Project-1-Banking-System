@@ -59,6 +59,10 @@ public class BankLauncher {
      */
     public static void bankInit() {
 
+        if (getBANKS().stream().noneMatch(bank -> bank.getID() == 0)) {
+            Bank defaultBank = new Bank(0, "Default Bank", "0000");
+            addBank(defaultBank);
+        }
         bankLogin();
         if (isLogged()) {
             boolean menuContinue = true;
@@ -295,7 +299,7 @@ public class BankLauncher {
     public static Account findAccount(String accountNum) {
 
         for (Bank bank : getBANKS()) {
-            if (Bank.accountExists(bank, accountNum) == true){
+            if (Bank.accountExists(bank, accountNum)){
                 return bank.getBankAccount(bank, accountNum);
             }
         }
