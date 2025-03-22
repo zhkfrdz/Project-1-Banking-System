@@ -34,10 +34,12 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * @param OWNERLNAME the owner's last name
      * @param OWNEREMAIL the owner's email
      * @param pin the account PIN
+     * @param loan the initial loan amount
      */
-    public CreditAccount(Bank bank,  String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+    public CreditAccount(Bank bank,  String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double loan) {
 
         super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+        this.loan = loan;
     }
 
     /**

@@ -67,7 +67,7 @@ public class AccountLauncher {
             pin = Main.prompt("Enter PIN: ", true);
             loggedAccount = checkCredentials(accountNum, pin);
             if (loggedAccount == null) {
-                System.out.println("Invalid account number or PIN. Please try again.");
+                System.out.println("Invalid Account Number or PIN. Please try again.");
             }
         } while (loggedAccount == null);
 
@@ -94,13 +94,13 @@ public class AccountLauncher {
         Field<Integer, Integer> bankID = new Field<Integer,Integer>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
         Field<String, String> bankName = new Field<String,String>("Name", String.class, "", new Field.StringFieldValidator());
         Field<String, String> bankPass = new Field<String,String>("Passcode", String.class, "", new Field.StringFieldValidator());
-        bankID.setFieldValue("Enter bank id: ");
-        bankName.setFieldValue("Enter bank name: ");
-        bankPass.setFieldValue("Enter bank passcode: ");
+        bankID.setFieldValue("Enter Bank Id: ");
+        bankName.setFieldValue("Enter Bank Name: ");
+        bankPass.setFieldValue("Enter Bank Passcode: ");
 
         for (Bank bank : BankLauncher.getBANKS()) {
-            if (bank.getID() == bankID.getFieldValue() && bank.getName().equals(bankName.getFieldValue())) {
-                System.out.println("Bank selected: " + bankName.getFieldValue());
+            if (bank.getID() == bankID.getFieldValue() && bank.getName().equals(bankName.getFieldValue()) && bank.getPasscode().equals(bankPass.getFieldValue())) {
+                System.out.println("Bank Selected: " + bankName.getFieldValue());
                 return bank;
             }
         }
