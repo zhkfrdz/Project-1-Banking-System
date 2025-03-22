@@ -205,7 +205,7 @@ public class Bank {
         while (true) {
             try {
                 Field<String, String> firstNameField = new Field<>("Enter first name: ", String.class, "3", validateString);
-                firstNameField.setFieldValue("Enter first name: ");
+                firstNameField.setFieldValue("Enter First Name: ");
                 firstName = firstNameField.getFieldValue();
                 if (firstName.length() >= 3) {
                     createNew.add(firstNameField);
@@ -220,7 +220,7 @@ public class Bank {
         while (true) {
             try {
                 Field<String, String> lastNameField = new Field<>("Enter last name: ", String.class, "3", validateString);
-                lastNameField.setFieldValue("Enter last name: ");
+                lastNameField.setFieldValue("Enter Last Name: ");
                 lastName = lastNameField.getFieldValue();
                 if (lastName.length() >= 3) {
                     createNew.add(lastNameField);
@@ -236,16 +236,16 @@ public class Bank {
         while (true) {
             try {
                 Field<String, String> emailField = new Field<>("Enter email: ", String.class, "", new Field.StringFieldValidator());
-                emailField.setFieldValue("Enter email: ");
+                emailField.setFieldValue("Enter Email: ");
                 email = emailField.getFieldValue();
                 if (email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:gmail|yahoo|\\w+\\.)+[a-zA-Z]{2,}$")) {
                     createNew.add(emailField);
                     break;
                 } else {
-                    System.out.println("Invalid email! Please input a valid email.");
+                    System.out.println("Invalid Email! Please input a valid Email.");
                 }
             } catch (IllegalArgumentException exc) {
-                System.out.println("Invalid input! Please input a valid email address.");
+                System.out.println("Invalid input! Please input a valid Email Address.");
             }
         }
 
@@ -254,14 +254,14 @@ public class Bank {
         while (true) {
             try {
                 Field<String, String> accountNumField = new Field<>("Enter account number: ", String.class, "4", validateString);
-                accountNumField.setFieldValue("Enter account number: ");
+                accountNumField.setFieldValue("Enter Account Number: ");
                 int num = Integer.parseInt(accountNumField.getFieldValue());
                 accountNum = String.format("%d", num);
                 if (accountExists(this, accountNum)) {
                     System.out.println("Sorry, this account number already exists. Please input a new one.");
                     continue;
                 }
-                if (accountNum.length() >= 4) {
+                if (!accountNum.isEmpty()) {
                     createNew.add(accountNumField);
                     break;
                 }
@@ -275,7 +275,7 @@ public class Bank {
         while (true) {
             try {
                 Field<String, String> pinField = new Field<>("Enter pin: ", String.class, "", validateString);
-                pinField.setFieldValue("Enter pin: ");
+                pinField.setFieldValue("Enter Pin: ");
                 pin = pinField.getFieldValue();
                 String pinTemp = pin;
                 if (pinTemp.length() >= 4) {
@@ -335,7 +335,7 @@ public class Bank {
 
         while (true) {
             Field<Double, Double> initialBalanceField = new Field<>("InitialBalance", Double.class, 0.0, new Field.DoubleFieldValidator());
-            initialBalanceField.setFieldValue("Enter initial balance: ", true);
+            initialBalanceField.setFieldValue("Enter Initial Balance: ", true);
 
             double initialBalance = initialBalanceField.getFieldValue();
 
@@ -345,7 +345,7 @@ public class Bank {
                 System.out.println("Account created successfully!");
                 return savings;
             } else {
-                System.out.println("Initial balance must be non-negative");
+                System.out.println("Initial Balance must be non-negative");
                 continue;
             }
         }

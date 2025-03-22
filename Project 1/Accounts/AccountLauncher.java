@@ -52,7 +52,7 @@ public class AccountLauncher {
         }
 
         while (assocBank == null) {
-            System.out.println("Select a bank first");
+            System.out.println("Select a Bank First");
             assocBank = selectBank();
             if (assocBank == null) {
                 System.out.println("Invalid bank selection. Please try again.");
@@ -63,7 +63,7 @@ public class AccountLauncher {
         String pin;
         do {
             Main.showMenuHeader("Account Login");
-            accountNum = Main.prompt("Enter account number: ", true);
+            accountNum = Main.prompt("Enter Account Number: ", true);
             pin = Main.prompt("Enter PIN: ", true);
             loggedAccount = checkCredentials(accountNum, pin);
             if (loggedAccount == null) {
@@ -72,7 +72,7 @@ public class AccountLauncher {
         } while (loggedAccount == null);
 
         if (loggedAccount != null) {
-            System.out.println("Login successful.");
+            System.out.println("Login Successful.");
             setLogSession(loggedAccount);
             if (loggedAccount.getClass() == SavingsAccount.class) {
                 SavingsAccountLauncher.savingsAccountInit();
@@ -94,7 +94,7 @@ public class AccountLauncher {
         Field<Integer, Integer> bankID = new Field<Integer,Integer>("ID", Integer.class, -1, new Field.IntegerFieldValidator());
         Field<String, String> bankName = new Field<String,String>("Name", String.class, "", new Field.StringFieldValidator());
         Field<String, String> bankPass = new Field<String,String>("Passcode", String.class, "", new Field.StringFieldValidator());
-        bankID.setFieldValue("Enter Bank Id: ");
+        bankID.setFieldValue("Enter Bank ID: ");
         bankName.setFieldValue("Enter Bank Name: ");
         bankPass.setFieldValue("Enter Bank Passcode: ");
 
