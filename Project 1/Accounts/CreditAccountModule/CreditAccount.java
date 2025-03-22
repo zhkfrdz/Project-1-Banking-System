@@ -74,7 +74,7 @@ public class CreditAccount extends Account implements Payment, Recompense {
     private void adjustLoanAmount(double amountAdjustment) {
 
         if (!canCredit(amountAdjustment)) {
-            System.out.println("Cannot process: Exceeds credit limit");
+            System.out.println("Cannot process payment: Credit exceeds limit. Please reduce the amount or check your credit limit.");
             return;
         }
 

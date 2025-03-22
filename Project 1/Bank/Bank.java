@@ -26,9 +26,9 @@ public class Bank {
         this.ID = ID;
         this.name = name;
         this.passcode = passcode;
-        this.DEPOSITLIMIT = 50000.0;
-        this.WITHDRAWLIMIT = 50000.0;
-        this.CREDITLIMIT = 100000.0;
+        this.DEPOSITLIMIT = 1000.0;
+        this.WITHDRAWLIMIT = 500.0;
+        this.CREDITLIMIT = 600.0;
         this.processingFee = 10.0;
         this.BANKACCOUNTS = new ArrayList<>();
     }
