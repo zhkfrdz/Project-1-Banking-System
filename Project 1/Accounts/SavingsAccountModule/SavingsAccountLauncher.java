@@ -65,7 +65,7 @@ public class SavingsAccountLauncher extends AccountLauncher {
         double depositAmount;
 
         while (true) {
-            String depositAmount_str = Main.prompt("Enter deposit amount: ", true);
+            String depositAmount_str = Main.prompt("Enter Deposit amount: ", true);
 
             try {
                 depositAmount = Double.parseDouble(depositAmount_str);

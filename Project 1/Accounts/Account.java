@@ -173,6 +173,4 @@ public abstract class Account {
         // Return the final string representation
         return accountInfo.toString();
     }
-
-
 }
